@@ -2,10 +2,11 @@
 import { Input, Button, Division } from '@/components/basic';
 
 const Search: React.FC = () => (
-  <Division className="flex gap-2">
+  <Division className="flex justify-center gap-2">
     <Input
       type="text"
       placeholder="Search for a Pokémon (e.g., pikachu, charizard)..."
+      className="w-128"
     />
     <Button className="flex justify-center items-center gap-1" variant="search">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

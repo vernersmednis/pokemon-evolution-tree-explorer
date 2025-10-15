@@ -1,0 +1,1 @@
+export const baseInputStyle = `border border-black focus:outline-none`;

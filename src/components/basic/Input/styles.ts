@@ -1,2 +1,1 @@
-// Styles for Input (empty for now)
-export const Input = {};
+export const baseInputStyle = `border border-black focus:outline-none`;

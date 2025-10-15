@@ -1,11 +1,10 @@
 import React from 'react';
 import type { InputProps } from "./types";
 import { twMerge } from 'tailwind-merge';
-
-const inputStyle = `border border-black focus:outline-none`;
+import { baseInputStyle } from './styles';
 
 const Input: React.FC<InputProps> = (props) => (
-  <input className={twMerge(inputStyle, props.className)} {...props} />
+  <input className={twMerge(baseInputStyle, props.className)} {...props} />
 );
 
 export default Input;

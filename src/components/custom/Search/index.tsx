@@ -1,8 +1,8 @@
 
-import { Input, Button, Container } from '@/components/basic';
+import { Input, Button, Division } from '@/components/basic';
 
 const Search: React.FC = () => (
-  <Container className="flex gap-2">
+  <Division className="flex gap-2">
     <Input
       type="text"
       placeholder="Search for a Pokémon (e.g., pikachu, charizard)..."
@@ -13,7 +13,7 @@ const Search: React.FC = () => (
       </svg>
       Search
     </Button>
-  </Container>
+  </Division>
 );
 
 export default Search;

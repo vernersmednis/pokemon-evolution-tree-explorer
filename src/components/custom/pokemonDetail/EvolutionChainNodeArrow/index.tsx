@@ -7,14 +7,14 @@ const EvolutionChainNodeArrow: React.FC<EvolutionChainNodeArrowProps> = ({ pokem
   return (
     <Division className="flex items-center gap-4 my-4">
       {/* Arrow */}
-      <Division className="flex flex-col items-center">
+      <Division variant="vertical-stack-center">
         <Division className="w-0.5 h-16 bg-black"></Division>
-        <Division className="text-2xl">▼</Division>
+        <Division className="text-2xl leading-none -mt-2">▼</Division>
       </Division>
       
       {/* Evolution Info */}
       {(pokemon.evolutionTrigger || pokemon.evolutionCondition) && (
-        <Division className="flex flex-col gap-1">
+        <Division variant="vertical-stack">
           {pokemon.evolutionTrigger && (
             <Division className="bg-gray-100 rounded px-2 py-1">
               <Span className="text-gray-700 text-xs font-semibold">

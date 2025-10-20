@@ -7,14 +7,14 @@ import type { EvolutionChainNodeProps } from './types';
 
 const EvolutionChainNode: React.FC<EvolutionChainNodeProps> = ({ pokemon }) => {
   return (
-    <Division variant="vertical-stack" className="items-center gap-8">
+    <Division variant="vertical-stack-center">
       {/* Current Pokemon Card */}
       <PokemonCard pokemon={pokemon} />
 
       {/* Render evolutions if they exist */}
       <Division className={`flex ${pokemon.evolvesTo.length > 1 ? 'gap-8 px-16' : ''} items-start`}>
         {pokemon.evolvesTo.map((evolution, index) => (
-          <Division key={index} className="flex flex-col items-center">
+          <Division key={index} variant="vertical-stack-center">
               {/* Evolution Arrow */}
               <EvolutionChainNodeArrow pokemon={evolution} />
               {/* Recursive call for next evolution */}

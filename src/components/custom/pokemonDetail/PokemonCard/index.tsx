@@ -8,16 +8,16 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   
   return (
     <Division className="border border-color-black rounded-3xl p-6 w-64">
-      <Division className="flex flex-col justify-between">
+      <Division variant="vertical-stack-between">
         <Span variant="id">#{pokemon.id}</Span>
         <Heading level={2} variant="section">{pokemon.name}</Heading>
       </Division>
-      
-      <Division className="flex justify-center">
+
+      <Division variant="horizontal-stack-center">
         <img src={pokemon.image} alt={pokemon.name} className="w-32 h-32 object-contain" />
       </Division>
 
-      <Division className="flex justify-center">
+      <Division variant="horizontal-stack-center">
         <Span variant="badge" className={bgColor}>
           {pokemon.type}
         </Span>
@@ -27,12 +27,12 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
         {pokemon.species}
       </Paragraph>
 
-      <Division className="flex justify-between">
-        <Division className="flex flex-col text-center">
+      <Division variant="horizontal-stack-between">
+        <Division variant="vertical-stack-center">
           <Label variant="stat">Height</Label>
           <Span variant="stat-value">{pokemon.height}</Span>
         </Division>
-        <Division className="flex flex-col text-center">
+        <Division variant="vertical-stack-center">
           <Label variant="stat">Weight</Label>
           <Span variant="stat-value">{pokemon.weight}</Span>
         </Division>

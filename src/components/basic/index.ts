@@ -7,3 +7,4 @@ export { default as Heading } from './Heading';
 export { default as Paragraph } from './Paragraph';
 export { default as UnorderedList } from './UnorderedList';
 export { default as Span } from './Span';
+export { default as Label } from './Label';

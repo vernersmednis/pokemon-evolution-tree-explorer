@@ -1,7 +1,7 @@
 
 import { Division } from '@/components/basic'
 import { EvolutionChainNode } from '@/components/custom'
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetEvolutionChain } from '@/hooks/pokemon/getEvolutionChain';
 

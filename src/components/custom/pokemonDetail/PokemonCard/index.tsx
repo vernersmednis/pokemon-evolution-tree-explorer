@@ -4,7 +4,11 @@ import { typeColors } from './styles';
 import React from 'react';
 
 const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
-  const bgColor = typeColors[pokemon.type] || typeColors['Normal'];
+
+  // Format certain pokemon data
+  const pokemonType = pokemon.types?.[0]?.type?.name || 'Normal';
+  const bgColor = typeColors[pokemonType] || typeColors['Normal'];
+  const imageUrl = pokemon.sprites?.other?.['official-artwork']?.front_default || '';
   
   return (
     <Division className="border border-color-black rounded-3xl p-6 w-64">
@@ -14,27 +18,27 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
       </Division>
 
       <Division variant="horizontal-stack-center">
-        <img src={pokemon.image} alt={pokemon.name} className="w-32 h-32 object-contain" />
+        <img src={imageUrl} alt={pokemon.name} className="w-32 h-32 object-contain" />
       </Division>
 
       <Division variant="horizontal-stack-center">
         <Span variant="badge" className={bgColor}>
-          {pokemon.type}
+          {pokemonType}
         </Span>
       </Division>
 
       <Paragraph variant="caption">
-        {pokemon.species}
+        {pokemon.species?.name || pokemon.name}
       </Paragraph>
 
       <Division variant="horizontal-stack-between">
         <Division variant="vertical-stack-center">
           <Label variant="stat">Height</Label>
-          <Span variant="stat-value">{pokemon.height}</Span>
+          <Span variant="stat-value">{(pokemon.height / 10).toFixed(1)}m</Span>
         </Division>
         <Division variant="vertical-stack-center">
           <Label variant="stat">Weight</Label>
-          <Span variant="stat-value">{pokemon.weight}</Span>
+          <Span variant="stat-value">{(pokemon.weight / 10).toFixed(1)}kg</Span>
         </Division>
       </Division>
     </Division>

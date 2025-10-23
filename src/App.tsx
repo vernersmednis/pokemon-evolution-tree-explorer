@@ -1,9 +1,10 @@
 import './App.css'
-import Dashboard from '@/screens/Dashboard'
-import PokemonDetail from '@/screens/PokemonDetail'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import Dashboard from '@/screens/dashboard'
+import PokemonDetail from '@/screens/pokemonDetail'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { Header, Footer, Heading, Paragraph, Division } from '@/components/basic'
 import { Search } from '@/components/custom'
+// QueryClientProvider is provided in main.tsx
 
 function App() {
   return (
@@ -17,13 +18,11 @@ function App() {
 
       {/* Main Content */}
       <Division variant="main">
-        <Router>
-          <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/pokemon/id" element={<PokemonDetail />} />
-            <Route path="/" element={<Navigate to='/dashboard' />} />
-          </Routes>
-        </Router>
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/pokemon/:id" element={<PokemonDetail />} />
+          <Route path="/" element={<Navigate to='/dashboard' />} />
+        </Routes>
       </Division>
       
       {/* Footer */}

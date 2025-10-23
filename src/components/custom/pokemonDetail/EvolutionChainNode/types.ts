@@ -1,5 +1,5 @@
-import type { Pokemon } from '@/types/pokemon';
+import type { EvolutionChainNodePokemon } from '@/types/pokemonEvolutionChainNode';
 
 export interface EvolutionChainNodeProps {
-  pokemon: Pokemon;
+  pokemon: EvolutionChainNodePokemon;
 }

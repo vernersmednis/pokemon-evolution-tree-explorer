@@ -1,14 +1,23 @@
 
-// Type definition for Pokemon data
+// Pokemon interface that matches the PokeAPI response structure
 export interface Pokemon {
   id: number;
   name: string;
-  image: string;
-  type: string;
-  species: string;
-  height: string;
-  weight: string;
-  evolutionTrigger?: string;
-  evolutionCondition?: string;
-  evolvesTo: Pokemon[];
+  height: number;
+  weight: number;
+  sprites: {
+    other?: {
+      'official-artwork'?: {
+        front_default?: string;
+      };
+    };
+  };
+  types: Array<{
+    type: {
+      name: string;
+    };
+  }>;
+  species: {
+    name: string;
+  };
 }

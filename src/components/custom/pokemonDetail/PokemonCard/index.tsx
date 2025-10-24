@@ -1,24 +1,30 @@
-import {Division, Span, Heading, Paragraph, Label} from '@/components/basic';
-import type { PokemonCardProps } from './types';
-import { typeColors } from './styles';
-import React from 'react';
+import { Division, Span, Heading, Paragraph, Label } from "@/components/basic";
+import type { PokemonCardProps } from "./types";
+import { typeColors } from "./styles";
+import React from "react";
 
 const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
-
   // Format certain pokemon data
-  const pokemonType = pokemon.types?.[0]?.type?.name || 'Normal';
-  const bgColor = typeColors[pokemonType] || typeColors['Normal'];
-  const imageUrl = pokemon.sprites?.other?.['official-artwork']?.front_default || '';
-  
+  const pokemonType = pokemon.types?.[0]?.type?.name || "Normal";
+  const bgColor = typeColors[pokemonType] || typeColors["Normal"];
+  const imageUrl =
+    pokemon.sprites?.other?.["official-artwork"]?.front_default || "";
+
   return (
     <Division className="border border-color-black rounded-3xl p-6 w-64">
       <Division variant="vertical-stack-between">
         <Span variant="id">#{pokemon.id}</Span>
-        <Heading level={2} variant="section">{pokemon.name}</Heading>
+        <Heading level={2} variant="section">
+          {pokemon.name}
+        </Heading>
       </Division>
 
       <Division variant="horizontal-stack-center">
-        <img src={imageUrl} alt={pokemon.name} className="w-32 h-32 object-contain" />
+        <img
+          src={imageUrl}
+          alt={pokemon.name}
+          className="w-32 h-32 object-contain"
+        />
       </Division>
 
       <Division variant="horizontal-stack-center">

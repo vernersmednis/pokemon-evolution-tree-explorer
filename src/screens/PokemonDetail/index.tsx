@@ -1,6 +1,6 @@
 
 import { Division } from '@/components/basic'
-import { EvolutionChainNode } from '@/components/custom'
+import { EvolutionChainNode, VerticalEvolutionChainNode } from '@/components/custom'
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetEvolutionChain } from '@/hooks/pokemon/getEvolutionChain';
@@ -12,15 +12,22 @@ const PokemonDetail: React.FC = () => {
     
   if (isLoading) return <Division>Loading evolution chain...</Division>;
   if (error) return <Division>Error loading evolution chain: {error.message}</Division>;
+  if (!evolutionChain || evolutionChain.length === 0) return <Division>No evolution chain found</Division>;
+  
   return (
-    <>
-        {/* Evolution Chain Container - Recursive Rendering */}
-        <Division className="mt-8">
-          {evolutionChain?.map((pokemon, index) => (
+    <Division  className="">
+      {/* Evolution Chain Container - Responsive Layout */}
+        {/* <Division className="overflow-x-srcoll md:overflow-x-hidden font-mono text-sm pl-0">
+          {evolutionChain.map(pokemon => (
+            <VerticalEvolutionChainNode key={pokemon.id} pokemon={pokemon} />
+          ))}
+        </Division> */}
+        <Division className="overflow-x-hidden md:overflow-x-scroll mt-8 px-4">
+          {evolutionChain.map((pokemon, index) => (
             <EvolutionChainNode key={index} pokemon={pokemon} />
           ))}
         </Division>
-    </>
+    </Division>
   );
 };
 

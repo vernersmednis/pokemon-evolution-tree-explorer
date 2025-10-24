@@ -1,7 +1,7 @@
 import { getPokemonSpecies, getEvolutionChain, getPokemon } from "@/api/services/pokemon";
 import { useQuery } from '@tanstack/react-query';
 import type { Pokemon } from '@/types/pokemon';
-import type { EvolutionChainNodePokemon } from '@/types/pokemonEvolutionChainNode';
+import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemon';
 import type { EvolutionChain, EvolutionChainNode } from '@/types/evolutionChain';
 import type { PokemonSpecies } from '@/types/pokemonSpecies';
 import type { AxiosResponse } from 'axios';

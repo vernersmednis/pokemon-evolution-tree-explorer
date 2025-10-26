@@ -8,7 +8,7 @@ const PokemonDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: evolutionChain, isLoading, error } = useGetEvolutionChain(id || "");
 
-  
+
   const [useVertical, setUseVertical] = useState(false);
   const verticalRef = useRef<HTMLDivElement>(null);
 
@@ -29,6 +29,7 @@ const PokemonDetail: React.FC = () => {
     };
     checkOverflow();
     window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
   }, [evolutionChain]);
 
 

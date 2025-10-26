@@ -1,41 +1,30 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { Division } from "@/components/basic";
-import {
-  EvolutionChainNode,
-  VerticalEvolutionChainNode,
-} from "@/components/custom";
+import { EvolutionChainNode, VerticalEvolutionChainNode } from "@/components/custom";
 import { useParams } from "react-router-dom";
 import { useGetEvolutionChain } from "@/hooks/pokemon/getEvolutionChain";
 
 const PokemonDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-
   const { data: evolutionChain, isLoading, error } = useGetEvolutionChain(id || "");
 
   const [useVertical, setUseVertical] = useState(false);
   const verticalRef = useRef<HTMLDivElement>(null);
 
-  //---
-
-  let x = -1;
-
-  useEffect(() => {
+  // Dynamic Overflow Detection for switching between mobile view and desktop view
+  useLayoutEffect(() => {
     const checkOverflow = () => {
       if (verticalRef.current) {
         const { scrollWidth } = verticalRef.current;
-        const windowWidth = window.innerWidth; // Account for padding/margins
-        if (scrollWidth !== 0 && x === -1) x = scrollWidth;
-        if (x !== -1) setUseVertical(x > windowWidth);
-        else setUseVertical(false);
+        const windowWidth = window.innerWidth;
+        if (scrollWidth !== 0 ) setUseVertical(scrollWidth > windowWidth);
       }
     };
-
     checkOverflow();
     window.addEventListener("resize", checkOverflow);
     return () => window.removeEventListener("resize", checkOverflow);
   }, [evolutionChain]);
 
-  //---
 
   if (isLoading) return <Division>Loading evolution chain...</Division>;
   if (error) return <Division>Error loading evolution chain: {error.message}</Division>;

@@ -1,4 +1,6 @@
 import { Label } from "@/components/ui/label";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import type { PokemonCardProps } from "./types";
 import { typeColors } from "./styles";
 import React from "react";
@@ -11,13 +13,13 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
     pokemon.sprites?.other?.["official-artwork"]?.front_default || "";
 
   return (
-    <div className="border border-color-black rounded-3xl p-6 w-64">
-      <div className="flex flex-col items-between">
+    <Card className="border-color-black rounded-3xl p-6 w-64">
+      <CardHeader className="flex flex-col items-between p-0">
         <span className="text-sm font-semibold text-gray-600">#{pokemon.id}</span>
-        <h2>
+        <CardTitle className="text-left">
           {pokemon.name}
-        </h2>
-      </div>
+        </CardTitle>
+      </CardHeader>
 
       <div className="flex flex-row justify-center">
         <img
@@ -28,9 +30,9 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
       </div>
 
       <div className="flex flex-row justify-center">
-        <span className={`px-4 py-1 rounded-full text-sm font-semibold ${bgColor}`}>
+        <Badge className={bgColor}>
           {pokemonType}
-        </span>
+        </Badge>
       </div>
 
       <p className="leading-relaxed text-xs text-gray-500 italic">
@@ -47,7 +49,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
           <span className="font-bold text-base">{(pokemon.weight / 10).toFixed(1)}kg</span>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

@@ -1,6 +1,7 @@
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Command, CommandInput, CommandList, CommandItem } from '@/components/ui/command';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearchPokemon } from '@/hooks/pokemon/searchPokemon';

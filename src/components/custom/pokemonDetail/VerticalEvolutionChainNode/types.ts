@@ -2,5 +2,4 @@ import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemo
 
 export interface VerticalEvolutionChainNodeProps {
   pokemon: EvolutionChainNodePokemon;
-  depth?: number;
 }

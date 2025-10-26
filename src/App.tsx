@@ -1,12 +1,20 @@
 import './App.css'
 import Dashboard from '@/screens/dashboard'
 import PokemonDetail from '@/screens/pokemonDetail'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { Header, Footer, Heading, Paragraph, Division } from '@/components/basic'
 import { Search } from '@/components/custom'
 // QueryClientProvider is provided in main.tsx
 
 function App() {
+
+  // Wrapper component that forces remount of PokemonDetail when pathname changes
+  const PokemonDetailWrapper: React.FC = () => {
+    const location = useLocation();
+    // using pathname as key forces React to remount the component whenever the URL changes
+    return <PokemonDetail key={location.pathname} />;
+  };
+
   return (
     <>
       {/* Header Section */}
@@ -20,7 +28,7 @@ function App() {
       <Division variant="main">
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/pokemon/:id" element={<PokemonDetail />} />
+          <Route path="/pokemon/:id" element={<PokemonDetailWrapper />} />
           <Route path="/" element={<Navigate to='/dashboard' />} />
         </Routes>
       </Division>

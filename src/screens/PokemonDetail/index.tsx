@@ -1,5 +1,4 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { Division } from "@/components/basic";
 import { EvolutionChainNode, VerticalEvolutionChainNode } from "@/components/custom";
 import { useParams } from "react-router-dom";
 import { useGetEvolutionChain } from "@/hooks/pokemon/getEvolutionChain";
@@ -33,24 +32,24 @@ const PokemonDetail: React.FC = () => {
   }, [evolutionChain]);
 
 
-  if (isLoading) return <Division>Loading evolution chain...</Division>;
-  if (error) return <Division>Error loading evolution chain: {error.message}</Division>;
-  if (!evolutionChain || evolutionChain.length === 0) return <Division>No evolution chain found</Division>;
+  if (isLoading) return <div>Loading evolution chain...</div>;
+  if (error) return <div>Error loading evolution chain: {error.message}</div>;
+  if (!evolutionChain || evolutionChain.length === 0) return <div>No evolution chain found</div>;
 
   return (
-    <Division className="">
+    <div className="">
       {/* Evolution Chain Container - Dynamic Overflow Detection */}
-      <Division ref={verticalRef} className={`${useVertical ? "hidden" : ""} mt-8 px-4`}>
+      <div ref={verticalRef} className={`${useVertical ? "hidden" : ""} mt-8 px-4`}>
         {evolutionChain.map((pokemon) => (
           <EvolutionChainNode key={pokemon.id} pokemon={pokemon} />
         ))}
-      </Division>
-      <Division className={`${useVertical ? "" : "hidden"} font-mono text-sm pl-0`}>
+      </div>
+      <div className={`${useVertical ? "" : "hidden"} font-mono text-sm pl-0`}>
         {evolutionChain.map((pokemon) => (
           <VerticalEvolutionChainNode key={pokemon.id} pokemon={pokemon} />
         ))}
-      </Division>
-    </Division>
+      </div>
+    </div>
   );
 };
 

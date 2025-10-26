@@ -1,55 +1,55 @@
 
-import { Button, Division, Heading, Span, UnorderedList } from '@/components/basic';
+import { Button } from '@/components/ui/button';
 import React from 'react';
 
 const Dashboard: React.FC = () => {
   return (
 
-    <Division className="flex flex-col gap-16">
+    <div className="flex flex-col gap-16">
 
       {/* Popular Pokemon Section */}
-      <Division className="w-128 flex flex-col items-center">
-        <Heading level={2} variant="section">Or try one of these popular Pokémon:</Heading>
-        <Division className="w-full flex flex-col gap-2">
-          <Division className="flex gap-2">
-            <Button className="flex-1" variant="showPokemon">Sawk</Button>
-            <Button className="flex-1" variant="showPokemon">Seismitoad</Button>
-            <Button className="flex-1" variant="showPokemon">Gloom</Button>
-            <Button className="flex-1" variant="showPokemon">Furret</Button>
-          </Division>
-          <Division className="flex gap-2">
-            <Button className="flex-1" variant="showPokemon">Sentret</Button>
-            <Button className="flex-1" variant="showPokemon">Charizard</Button>
-            <Button className="flex-1" variant="showPokemon">Sandshrew</Button>
-            <Button className="flex-1" variant="showPokemon">Moltres</Button>
-          </Division>
-        </Division>
-      </Division>
+      <div className="w-128 flex flex-col items-center">
+        <h2>Or try one of these popular Pokémon:</h2>
+        <div className="w-full flex flex-col gap-2">
+          <div className="flex gap-2">
+            <Button className="flex-1" variant="secondary">Sawk</Button>
+            <Button className="flex-1" variant="secondary">Seismitoad</Button>
+            <Button className="flex-1" variant="secondary">Gloom</Button>
+            <Button className="flex-1" variant="secondary">Furret</Button>
+          </div>
+          <div className="flex gap-2">
+            <Button className="flex-1" variant="secondary">Sentret</Button>
+            <Button className="flex-1" variant="secondary">Charizard</Button>
+            <Button className="flex-1" variant="secondary">Sandshrew</Button>
+            <Button className="flex-1" variant="secondary">Moltres</Button>
+          </div>
+        </div>
+      </div>
 
       {/* Tips Section */}
-      <Division>
-        <Heading level={3} variant="section">Tips:</Heading>
-        <UnorderedList variant="tips">
-          <UnorderedList.ListItem>
-            <Span>💡</Span>
+      <div>
+        <h3>Tips:</h3>
+        <ul>
+          <li>
+            <span>💡</span>
             You can search by Pokémon name or number (e.g., "25" for Pikachu)
-          </UnorderedList.ListItem>
-          <UnorderedList.ListItem>
-            <Span>💡</Span>
+          </li>
+          <li>
+            <span>💡</span>
             Use arrow keys to navigate suggestions, Enter to select
-          </UnorderedList.ListItem>
-          <UnorderedList.ListItem>
-            <Span>💡</Span>
+          </li>
+          <li>
+            <span>💡</span>
             Click on any Pokémon in the evolution tree to explore its line
-          </UnorderedList.ListItem>
-          <UnorderedList.ListItem>
-            <Span>💡</Span>
+          </li>
+          <li>
+            <span>💡</span>
             Some Pokémon have branching evolutions with different conditions
-          </UnorderedList.ListItem>
-        </UnorderedList>
-      </Division>
+          </li>
+        </ul>
+      </div>
 
-    </Division>
+    </div>
 
   );
 };

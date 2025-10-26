@@ -1,4 +1,4 @@
-import { Division, Span, Heading, Paragraph, Label } from "@/components/basic";
+import { Label } from "@/components/ui/label";
 import type { PokemonCardProps } from "./types";
 import { typeColors } from "./styles";
 import React from "react";
@@ -11,43 +11,43 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
     pokemon.sprites?.other?.["official-artwork"]?.front_default || "";
 
   return (
-    <Division className="border border-color-black rounded-3xl p-6 w-64">
-      <Division variant="vertical-stack-between">
-        <Span variant="id">#{pokemon.id}</Span>
-        <Heading level={2} variant="section">
+    <div className="border border-color-black rounded-3xl p-6 w-64">
+      <div className="flex flex-col items-between">
+        <span className="text-sm font-semibold text-gray-600">#{pokemon.id}</span>
+        <h2>
           {pokemon.name}
-        </Heading>
-      </Division>
+        </h2>
+      </div>
 
-      <Division variant="horizontal-stack-center">
+      <div className="flex flex-row justify-center">
         <img
           src={imageUrl}
           alt={pokemon.name}
           className="w-32 h-32 object-contain"
         />
-      </Division>
+      </div>
 
-      <Division variant="horizontal-stack-center">
-        <Span variant="badge" className={bgColor}>
+      <div className="flex flex-row justify-center">
+        <span className={`px-4 py-1 rounded-full text-sm font-semibold ${bgColor}`}>
           {pokemonType}
-        </Span>
-      </Division>
+        </span>
+      </div>
 
-      <Paragraph variant="caption">
+      <p className="leading-relaxed text-xs text-gray-500 italic">
         {pokemon.species?.name || pokemon.name}
-      </Paragraph>
+      </p>
 
-      <Division variant="horizontal-stack-between">
-        <Division variant="vertical-stack-center">
-          <Label variant="stat">Height</Label>
-          <Span variant="stat-value">{(pokemon.height / 10).toFixed(1)}m</Span>
-        </Division>
-        <Division variant="vertical-stack-center">
-          <Label variant="stat">Weight</Label>
-          <Span variant="stat-value">{(pokemon.weight / 10).toFixed(1)}kg</Span>
-        </Division>
-      </Division>
-    </Division>
+      <div className="flex flex-row justify-between">
+        <div className="flex flex-col items-center">
+          <Label className="text-xs font-semibold text-gray-700">Height</Label>
+          <span className="font-bold text-base">{(pokemon.height / 10).toFixed(1)}m</span>
+        </div>
+        <div className="flex flex-col items-center">
+          <Label className="text-xs font-semibold text-gray-700">Weight</Label>
+          <span className="font-bold text-base">{(pokemon.weight / 10).toFixed(1)}kg</span>
+        </div>
+      </div>
+    </div>
   );
 };
 

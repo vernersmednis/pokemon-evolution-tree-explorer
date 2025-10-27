@@ -37,7 +37,7 @@ const PokemonDetail: React.FC = () => {
   if (!evolutionChain || evolutionChain.length === 0) return <div>No evolution chain found</div>;
 
   return (
-    <div className="">
+    <>
       {/* Evolution Chain Container - Dynamic Overflow Detection */}
       <div ref={verticalRef} className={`${useVertical ? "hidden" : ""} mt-8 px-4`}>
         {evolutionChain.map((pokemon) => (
@@ -49,7 +49,7 @@ const PokemonDetail: React.FC = () => {
           <VerticalEvolutionChainNode key={pokemon.id} pokemon={pokemon} />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

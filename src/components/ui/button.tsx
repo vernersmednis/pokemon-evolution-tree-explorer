@@ -19,6 +19,12 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        pokeball: "bg-red-600 text-white hover:bg-red-700 shadow-md hover:shadow-lg focus-visible:ring-red-500/20",
+        "pokeball-outline": "border-2 border-red-600 text-red-600 bg-white hover:bg-red-50 shadow-sm hover:shadow-md focus-visible:ring-red-500/20",
+        "pokeball-ghost": "text-red-600 hover:bg-red-50 hover:text-red-700",
+        greatball: "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg focus-visible:ring-blue-500/20",
+        "greatball-outline": "border-2 border-blue-600 text-blue-600 bg-white hover:bg-blue-50 shadow-sm hover:shadow-md focus-visible:ring-blue-500/20",
+        "greatball-ghost": "text-blue-600 hover:bg-blue-50 hover:text-blue-700",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

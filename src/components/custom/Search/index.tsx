@@ -1,7 +1,6 @@
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Command, CommandInput, CommandList, CommandItem } from '@/components/ui/command';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearchPokemon } from '@/hooks/pokemon/searchPokemon';
@@ -35,7 +34,7 @@ const Search: React.FC = () => {
       />
       <Button 
         className="flex justify-center items-center gap-1" 
-        variant="destructive"
+        variant="pokeball"
         onClick={handleSearch}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

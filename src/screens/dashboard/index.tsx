@@ -1,7 +1,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { Lightbulb, Zap, Search as SearchIcon, TrendingUp } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -79,8 +78,6 @@ const Dashboard: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Separator className="bg-red-100" />
-
       {/* Recommended Pokemon Section */}
       <Card variant="greatball" className="overflow-hidden">
         <CardHeader>
@@ -109,8 +106,6 @@ const Dashboard: React.FC = () => {
           </div>
         </CardContent>
       </Card>
-
-      <Separator className="bg-red-100" />
 
       {/* Tips Section */}
       <div>

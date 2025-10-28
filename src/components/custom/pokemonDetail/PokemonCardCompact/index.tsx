@@ -1,9 +1,21 @@
 import type { PokemonCardCompactProps } from './types';
 import { typeColors } from './styles';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogNavigation } from "@/components/ui/dialog";
+import { Card } from "@/components/ui/card";
 import { PokemonCard } from '@/components/custom';
-import React, { useState } from 'react';
+import { parentMap } from '@/hooks/pokemon/getEvolutionChain';
+import React, { useState, useMemo } from 'react';
+import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemon';
+
+// Helper functions for evolution tree traversal
+const findRoot = (pokemon: EvolutionChainNodePokemon): EvolutionChainNodePokemon => {
+  while (parentMap.has(pokemon)) pokemon = parentMap.get(pokemon)!
+  return pokemon
+}
+
+const buildDFSList = (pokemon: EvolutionChainNodePokemon): EvolutionChainNodePokemon[] => 
+  [pokemon, ...pokemon.evolvesTo.flatMap(buildDFSList)]
 
 const PokemonCardCompact: React.FC<PokemonCardCompactProps> = ({ pokemon }) => {
   const pokemonType = pokemon.types?.[0]?.type?.name || 'Normal';
@@ -11,6 +23,10 @@ const PokemonCardCompact: React.FC<PokemonCardCompactProps> = ({ pokemon }) => {
   const imageUrl = pokemon.sprites?.other?.['official-artwork']?.front_default || '';
   
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Build evolution list and find initial index
+  const evolutionList = useMemo(() => buildDFSList(findRoot(pokemon)), [pokemon]);
+  const initialIndex = useMemo(() => evolutionList.findIndex(p => p.id === pokemon.id), [evolutionList, pokemon.id]);
 
   return (
     <>
@@ -37,7 +53,11 @@ const PokemonCardCompact: React.FC<PokemonCardCompactProps> = ({ pokemon }) => {
       </Tooltip>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="flex justify-center">
-          <PokemonCard pokemon={pokemon} />
+          <DialogNavigation initialIndex={initialIndex} variant="pokeball-ghost">
+            {evolutionList.map(pokemon => (
+              <PokemonCard key={pokemon.id} pokemon={pokemon} />
+            ))}
+          </DialogNavigation>
         </DialogContent>
       </Dialog>
     </>

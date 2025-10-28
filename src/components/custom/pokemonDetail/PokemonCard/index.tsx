@@ -13,7 +13,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
     pokemon.sprites?.other?.["official-artwork"]?.front_default || "";
 
   return (
-    <Card variant="pokeball-ghost" className="p-6 w-64">
+    <Card variant="pokeball-outline-secondary" className="p-6 w-64">
       <CardHeader className="flex flex-col items-between p-0">
         <span className="text-sm font-semibold text-gray-600">#{pokemon.id}</span>
         <CardTitle className="text-left">

@@ -7,4 +7,5 @@ export interface EvolutionChainNodePokemon extends Pokemon {
   evolutionTrigger?: string;
   evolutionCondition?: string;
   evolvesTo: EvolutionChainNodePokemon[]; // Always defined for evolution chains, can be empty array
+  // Note: Parent relationships are stored in a WeakMap (see getEvolutionChain.ts) to avoid circular references
 }

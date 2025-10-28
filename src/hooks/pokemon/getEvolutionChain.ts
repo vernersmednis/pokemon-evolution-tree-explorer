@@ -6,26 +6,40 @@ import type { EvolutionChain, EvolutionChainNode } from '@/types/evolutionChain'
 import type { PokemonSpecies } from '@/types/pokemonSpecies';
 import type { AxiosResponse } from 'axios';
 
+// WeakMap to store parent relationships without circular references
+export const parentMap = new WeakMap<EvolutionChainNodePokemon, EvolutionChainNodePokemon>();
+
 // Simple function to transform evolution chain to EvolutionChainNodePokemon[]
 const transformEvolutionChain = async (chain: EvolutionChainNode): Promise<EvolutionChainNodePokemon[]> => {
   // Process the chain recursively
-  const processChain = async (chainNode: EvolutionChainNode): Promise<EvolutionChainNodePokemon> => {
+  const processChain = async (chainNode: EvolutionChainNode, parent?: EvolutionChainNodePokemon): Promise<EvolutionChainNodePokemon> => {
     // Get basic Pokemon data
     const pokemonResponse: AxiosResponse<Pokemon> = await getPokemon(chainNode.species.name);
     const pokemonData = pokemonResponse.data;
     
-    // Transform evolvesTo recursively
-    const evolvesTo: EvolutionChainNodePokemon[] = [];
-    for (const evolution of chainNode.evolves_to) {
-      evolvesTo.push(await processChain(evolution));
-    }
-    
-    return {
+    // Create the current pokemon node (without evolvesTo first)
+    const currentPokemon: EvolutionChainNodePokemon = {
       ...pokemonData,
       evolutionTrigger: chainNode.evolution_details?.[0]?.trigger?.name || undefined,
       evolutionCondition: chainNode.evolution_details?.[0]?.min_level ? `Level ${chainNode.evolution_details[0].min_level}` : undefined,
-      evolvesTo
+      evolvesTo: []
     };
+    
+    // Store parent relationship in WeakMap instead of on the object
+    if (parent) {
+      parentMap.set(currentPokemon, parent);
+    }
+    
+    // Transform evolvesTo recursively, passing current pokemon as parent
+    const evolvesTo: EvolutionChainNodePokemon[] = [];
+    for (const evolution of chainNode.evolves_to) {
+      evolvesTo.push(await processChain(evolution, currentPokemon));
+    }
+    
+    // Update evolvesTo array
+    currentPokemon.evolvesTo = evolvesTo;
+    
+    return currentPokemon;
   };
   
   // Return array with just the base Pokemon

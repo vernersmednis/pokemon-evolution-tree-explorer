@@ -1,4 +1,4 @@
-import type { PokemonCardCompactProps } from './types';
+import type { CompactPokemonCardProps } from './types';
 import { typeColors } from './styles';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogNavigation } from "@/components/ui/dialog";
@@ -16,7 +16,7 @@ const findRoot = (pokemon: EvolutionChainNodePokemon) => {
 const buildDFSList = (pokemon: EvolutionChainNodePokemon): EvolutionChainNodePokemon[] => 
   [pokemon, ...pokemon.evolvesTo.flatMap(buildDFSList)]
 
-const PokemonCardCompact = ({ pokemon }: PokemonCardCompactProps) => {
+const CompactPokemonCard = ({ pokemon }: CompactPokemonCardProps) => {
   const pokemonType = pokemon.types?.[0]?.type?.name || 'Normal';
   const bgColor = typeColors[pokemonType] || typeColors['Normal'];
   const imageUrl = pokemon.sprites?.other?.['official-artwork']?.front_default || '';
@@ -63,4 +63,4 @@ const PokemonCardCompact = ({ pokemon }: PokemonCardCompactProps) => {
   );
 };
 
-export default PokemonCardCompact;
+export default CompactPokemonCard;

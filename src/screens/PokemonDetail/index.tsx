@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { EvolutionChainNode, VerticalEvolutionChainNode } from "@/components/custom";
+import { EvolutionChainNode, CompactEvolutionChainNode } from "@/components/custom";
 import { useParams } from "react-router-dom";
 import { useGetEvolutionChain } from "@/hooks/pokemon/getEvolutionChain";
 
@@ -46,7 +46,7 @@ const PokemonDetail = () => {
       </div>
       <div className={`${useVertical ? "" : "hidden"} font-mono text-sm pl-0`}>
         {evolutionChain.map((pokemon) => (
-          <VerticalEvolutionChainNode key={pokemon.id} pokemon={pokemon} />
+          <CompactEvolutionChainNode key={pokemon.id} pokemon={pokemon} />
         ))}
       </div>
     </>

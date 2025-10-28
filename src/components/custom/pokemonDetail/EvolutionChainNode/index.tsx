@@ -1,10 +1,9 @@
 import { PokemonCard, EvolutionChainNodeArrow } from '@/components/custom';
-import React from 'react';
 import type { EvolutionChainNodeProps } from './types';
 
 
 
-const EvolutionChainNode: React.FC<EvolutionChainNodeProps> = ({ pokemon }) => {
+const EvolutionChainNode = ({ pokemon }: EvolutionChainNodeProps) => {
   return (
     <div className="flex flex-col items-center">
       {/* Current Pokemon Card */}

@@ -1,7 +1,6 @@
-import React from 'react';
 import type { EvolutionChainNodeArrowProps } from './types';
 
-const EvolutionChainNodeArrow: React.FC<EvolutionChainNodeArrowProps> = ({ pokemon }) => {
+const EvolutionChainNodeArrow = ({ pokemon }: EvolutionChainNodeArrowProps) => {
 
   return (
     <div className="flex items-center gap-4 my-4">

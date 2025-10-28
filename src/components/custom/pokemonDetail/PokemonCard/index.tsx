@@ -3,9 +3,8 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { PokemonCardProps } from "./types";
 import { typeColors } from "./styles";
-import React from "react";
 
-const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
+const PokemonCard = ({ pokemon }: PokemonCardProps) => {
   // Format certain pokemon data
   const pokemonType = pokemon.types?.[0]?.type?.name || "Normal";
   const bgColor = typeColors[pokemonType] || typeColors["Normal"];

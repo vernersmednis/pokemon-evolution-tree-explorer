@@ -1,9 +1,7 @@
 import { PokemonCardCompact, VerticalEvolutionChainNode } from "@/components/custom";
 import type { VerticalEvolutionChainNodeProps } from "./types";
 
-const RecursiveNode: React.FC<VerticalEvolutionChainNodeProps> = ({
-  pokemon,
-}) => (
+const RecursiveNode = ({ pokemon }: VerticalEvolutionChainNodeProps) => (
   <>
     <div className="flex items-center mb-2">
       <div className="flex-1">

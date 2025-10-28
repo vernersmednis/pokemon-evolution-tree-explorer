@@ -2,10 +2,9 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Lightbulb, Zap, Search as SearchIcon, TrendingUp } from 'lucide-react';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const navigate = useNavigate();
 
   const featuredPokemon = [

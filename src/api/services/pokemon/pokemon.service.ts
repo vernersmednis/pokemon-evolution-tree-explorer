@@ -1,13 +1,12 @@
 import { api } from "@/api/api";
-import type { Pokemon } from "@/types/pokemon";
 
 export const getPokemon = (id: string) => {
-  const response = api.get<Pokemon>(`/pokemon/${id}`);
+  const response = api.get(`/pokemon/${id}`);
   return response;
 };
 
 export const searchPokemon = (name: string) => {
-  const response = api.get<Pokemon>(`/pokemon/${name}`);
+  const response = api.get(`/pokemon/${name}`);
   return response;
 };
 

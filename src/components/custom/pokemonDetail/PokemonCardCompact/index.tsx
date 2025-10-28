@@ -2,14 +2,13 @@ import type { PokemonCardCompactProps } from './types';
 import { typeColors } from './styles';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogNavigation } from "@/components/ui/dialog";
-import { Card } from "@/components/ui/card";
 import { PokemonCard } from '@/components/custom';
 import { parentMap } from '@/hooks/pokemon/getEvolutionChain';
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemon';
 
 // Helper functions for evolution tree traversal
-const findRoot = (pokemon: EvolutionChainNodePokemon): EvolutionChainNodePokemon => {
+const findRoot = (pokemon: EvolutionChainNodePokemon) => {
   while (parentMap.has(pokemon)) pokemon = parentMap.get(pokemon)!
   return pokemon
 }
@@ -17,7 +16,7 @@ const findRoot = (pokemon: EvolutionChainNodePokemon): EvolutionChainNodePokemon
 const buildDFSList = (pokemon: EvolutionChainNodePokemon): EvolutionChainNodePokemon[] => 
   [pokemon, ...pokemon.evolvesTo.flatMap(buildDFSList)]
 
-const PokemonCardCompact: React.FC<PokemonCardCompactProps> = ({ pokemon }) => {
+const PokemonCardCompact = ({ pokemon }: PokemonCardCompactProps) => {
   const pokemonType = pokemon.types?.[0]?.type?.name || 'Normal';
   const bgColor = typeColors[pokemonType] || typeColors['Normal'];
   const imageUrl = pokemon.sprites?.other?.['official-artwork']?.front_default || '';

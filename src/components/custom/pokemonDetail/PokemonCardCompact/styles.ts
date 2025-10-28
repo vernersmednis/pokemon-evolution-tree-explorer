@@ -1,5 +1,5 @@
 // Type colors for Pokemon badges - same as PokemonCard
-export const typeColors: { [key: string]: string } = {
+export const typeColors: Record<string, string> = {
   Normal: "bg-gray-400 text-white",
   Fire: "bg-red-500 text-white", 
   Water: "bg-blue-500 text-white",

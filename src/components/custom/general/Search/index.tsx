@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearchPokemon } from '@/hooks/pokemon/searchPokemon';
 
-const Search: React.FC = () => {
-  const [inputValue, setInputValue] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+const Search = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const { data: pokemonData, isLoading, error } = useSearchPokemon(searchTerm);

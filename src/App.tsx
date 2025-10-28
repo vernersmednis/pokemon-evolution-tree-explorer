@@ -8,7 +8,7 @@ import { Search } from '@/components/custom'
 function App() {
 
   // Wrapper component that forces remount of PokemonDetail when pathname changes
-  const PokemonDetailWrapper: React.FC = () => {
+  const PokemonDetailWrapper = () => {
     const location = useLocation();
     // using pathname as key forces React to remount the component whenever the URL changes
     return <PokemonDetail key={location.pathname} />;

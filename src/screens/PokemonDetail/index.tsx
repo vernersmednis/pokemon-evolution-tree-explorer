@@ -1,15 +1,15 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { EvolutionChainNode, VerticalEvolutionChainNode } from "@/components/custom";
 import { useParams } from "react-router-dom";
 import { useGetEvolutionChain } from "@/hooks/pokemon/getEvolutionChain";
 
-const PokemonDetail: React.FC = () => {
+const PokemonDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { data: evolutionChain, isLoading, error } = useGetEvolutionChain(id || "");
 
 
   const [useVertical, setUseVertical] = useState(false);
-  const verticalRef = useRef<HTMLDivElement>(null);
+  const verticalRef = useRef(null);
 
   // Dynamic Overflow Detection for switching between mobile view and desktop view
   useLayoutEffect(() => {

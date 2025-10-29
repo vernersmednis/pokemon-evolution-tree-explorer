@@ -9,43 +9,22 @@ const textVariants = cva(
   "leading-normal",
   {
     variants: {
-      size: {
-        lg: "text-lg",
-        base: "text-base",
-        sm: "text-sm",
-        xs: "text-xs",
-      },
-      variant: {
-        default: "text-foreground",
-      },
-      weight: {
-        normal: "font-normal",
-        medium: "font-medium",
-        semibold: "font-semibold",
-        bold: "font-bold",
+      size: {lg: "text-lg", base: "text-base",sm: "text-sm",xs: "text-xs" },
+      variant: {default: "text-foreground" },
+      weight: { 
+        normal: "font-normal", medium: "font-medium",
+        semibold: "font-semibold", bold: "font-bold",
       }
     },
-    defaultVariants: {
-      size: "base",
-      variant: "default",
-      weight: "normal",
-    },
+    defaultVariants: { size: "base", variant: "default", weight: "normal" },
   }
 )
 
-function Text({
-  className,
-  size,
-  variant,
-  weight,
-  as: Comp = "p",
-  asChild = false,
-  ...props
-}: React.ComponentProps<"p"> &
-  VariantProps<typeof textVariants> & {
-    as?: "p" | "span" | "div" | "label"
-    asChild?: boolean
-  }) {
+function Text({ 
+    className, size, variant, weight, as: Comp = "p", asChild = false, ...props 
+}: React.ComponentProps<"p"> & VariantProps<typeof textVariants> & { 
+    as?: "p" | "span" | "div" | "label"; asChild?: boolean; 
+}) {
   const Component = (asChild ? Slot : Comp) as React.ElementType
   return (
     <Component
@@ -60,34 +39,18 @@ const captionVariants = cva(
   "text-xs leading-tight",
   {
     variants: {
-      variant: {
-        default: "text-muted-foreground",
-      },
-      weight: {
-        normal: "font-normal",
-        medium: "font-medium",
-        semibold: "font-semibold",
-      },
+      variant: { default: "text-muted-foreground" },
+      weight: { normal: "font-normal", medium: "font-medium", semibold: "font-semibold" },
     },
-    defaultVariants: {
-      variant: "default",
-      weight: "normal",
-    },
+    defaultVariants: { variant: "default", weight: "normal" },
   }
 )
 
 function Caption({
-  className,
-  variant,
-  weight,
-  as: Comp = "span",
-  asChild = false,
-  ...props
-}: React.ComponentProps<"span"> &
-  VariantProps<typeof captionVariants> & {
-    as?: "span" | "p" | "div"
-    asChild?: boolean
-  }) {
+    className, variant, weight, as: Comp = "span", asChild = false, ...props
+}: React.ComponentProps<"span"> & VariantProps<typeof captionVariants> & {
+    as?: "span" | "p" | "div"; asChild?: boolean
+}) {
   const Component = (asChild ? Slot : Comp) as React.ElementType
   return (
     <Component

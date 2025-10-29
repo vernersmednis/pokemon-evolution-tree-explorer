@@ -53,13 +53,12 @@ const CompactPokemonCard = ({ pokemon }: CompactPokemonCardProps) => {
         </TooltipContent>
       </Tooltip>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-fit max-h-fit">
+        <DialogContent className="w-fit max-h-fit">
           <Carousel
             orientation="vertical"
             opts={{
               startIndex: initialIndex,
             }}
-            className="w-full max-w-md"
           >
             <CarouselPrevious variant={"pokeball-ghost"} positioning={"secondary"}>        
               <ChevronUp />

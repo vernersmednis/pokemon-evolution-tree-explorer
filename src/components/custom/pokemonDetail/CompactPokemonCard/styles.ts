@@ -1,4 +1,4 @@
-// Pokemon type color palette with Tailwind classes
+// Type colors for Pokemon badges - same as PokemonCard
 export const typeColors: Record<string, string> = {
   Normal: "bg-gray-400 text-white",
   Fire: "bg-red-500 text-white", 

@@ -1,37 +1,35 @@
-import { Division, Span } from '@/components/basic';
-import React from 'react';
 import type { EvolutionChainNodeArrowProps } from './types';
 
-const EvolutionChainNodeArrow: React.FC<EvolutionChainNodeArrowProps> = ({ pokemon }) => {
+const EvolutionChainNodeArrow = ({ pokemon }: EvolutionChainNodeArrowProps) => {
 
   return (
-    <Division className="flex items-center gap-4 my-4">
+    <div className="flex items-center gap-4 my-4">
       {/* Arrow */}
-      <Division variant="vertical-stack-center">
-        <Division className="w-0.5 h-16 bg-black"></Division>
-        <Division className="text-2xl leading-none -mt-2">▼</Division>
-      </Division>
+      <div className="flex flex-col items-center">
+        <div className="w-0.5 h-16 bg-black"></div>
+        <div className="text-2xl leading-none -mt-2">▼</div>
+      </div>
       
       {/* Evolution Info */}
       {(pokemon.evolutionTrigger || pokemon.evolutionCondition) && (
-        <Division variant="vertical-stack">
+        <div className="flex flex-col">
           {pokemon.evolutionTrigger && (
-            <Division className="bg-gray-100 rounded px-2 py-1">
-              <Span className="text-gray-700 text-xs font-semibold">
+            <div className="bg-gray-100 rounded px-2 py-1">
+              <span className="text-gray-700 text-xs font-semibold">
                 {pokemon.evolutionTrigger}
-              </Span>
-            </Division>
+              </span>
+            </div>
           )}
           {pokemon.evolutionCondition && (
-            <Division className="bg-gray-50 rounded px-2 py-1">
-              <Span className="text-gray-600 text-xs">
+            <div className="bg-gray-50 rounded px-2 py-1">
+              <span className="text-gray-600 text-xs">
                 {pokemon.evolutionCondition}
-              </Span>
-            </Division>
+              </span>
+            </div>
           )}
-        </Division>
+        </div>
       )}
-    </Division>
+    </div>
   );
 };
 

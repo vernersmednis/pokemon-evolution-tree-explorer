@@ -1,28 +1,26 @@
-import { Division } from '@/components/basic';
 import { PokemonCard, EvolutionChainNodeArrow } from '@/components/custom';
-import React from 'react';
 import type { EvolutionChainNodeProps } from './types';
 
 
 
-const EvolutionChainNode: React.FC<EvolutionChainNodeProps> = ({ pokemon }) => {
+const EvolutionChainNode = ({ pokemon }: EvolutionChainNodeProps) => {
   return (
-    <Division variant="vertical-stack-center">
+    <div className="flex flex-col items-center">
       {/* Current Pokemon Card */}
       <PokemonCard pokemon={pokemon} />
 
       {/* Render evolutions if they exist */}
-      <Division className={`flex ${(pokemon.evolvesTo?.length ?? 0) > 1 ? 'gap-8 px-16' : ''} items-start`}>
+      <div className={`flex ${(pokemon.evolvesTo?.length ?? 0) > 1 ? 'gap-8 px-16' : ''} items-start`}>
         {(pokemon.evolvesTo ?? []).map((evolution) => (
-          <Division key={evolution.id} variant="vertical-stack-center">
+          <div key={evolution.id} className="flex flex-col items-center">
               {/* Evolution Arrow */}
               <EvolutionChainNodeArrow pokemon={evolution} />
               {/* Recursive call for next evolution */}
               <EvolutionChainNode pokemon={evolution} />
-          </Division>
+          </div>
           ))}
-      </Division>
-    </Division>
+      </div>
+    </div>
   );
 };
 

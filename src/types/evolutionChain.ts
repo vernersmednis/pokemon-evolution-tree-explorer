@@ -13,8 +13,3 @@ export interface EvolutionChainNode {
   evolves_to: EvolutionChainNode[];
   evolution_details: EvolutionDetail[];
 }
-
-export interface EvolutionChain {
-  chain: EvolutionChainNode;
-  // Add other evolution chain properties as needed
-}

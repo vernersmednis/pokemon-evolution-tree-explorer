@@ -2,46 +2,45 @@ import './App.css'
 import Dashboard from '@/screens/dashboard'
 import PokemonDetail from '@/screens/pokemonDetail'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { Header, Footer, Heading, Paragraph, Division } from '@/components/basic'
 import { Search } from '@/components/custom'
 // QueryClientProvider is provided in main.tsx
 
 function App() {
 
   // Wrapper component that forces remount of PokemonDetail when pathname changes
-  const PokemonDetailWrapper: React.FC = () => {
+  const PokemonDetailWrapper = () => {
     const location = useLocation();
     // using pathname as key forces React to remount the component whenever the URL changes
     return <PokemonDetail key={location.pathname} />;
   };
-
+ 
   return (
     <>
       {/* Header Section */}
-      <Header variant="page">
-        <Heading level={1} variant="display">Pokémon Evolution Tree Explorer</Heading>
-        <Paragraph variant="tagline">Discover the evolutionary paths of your favorite Pokémon</Paragraph>
+      <header className="text-center sticky top-0 z-10 pt-8 pb-8 border-b border-gray-300 bg-white shadow-sm">
+        <h1>Pokémon Evolution Tree Explorer</h1>
+        <p className="leading-relaxed text-lg text-gray-600">Discover the evolutionary paths of your favorite Pokémon</p>
         <Search />
-      </Header>
+      </header>
 
       {/* Main Content */}
-      <Division variant="main">
+      <div className="my-8 flex flex-col items-center flex-grow">
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/pokemon/:id" element={<PokemonDetailWrapper />} />
           <Route path="/" element={<Navigate to='/dashboard' />} />
         </Routes>
-      </Division>
+      </div>
       
       {/* Footer */}
-      <Footer variant="page">
-        <Paragraph variant="attribution">
+      <footer className="text-center pt-8 pb-8 border-t-2 border-gray-400 text-base bg-gray-50">
+        <p className="leading-relaxed text-xs text-gray-600">
           Data provided by <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a>
-        </Paragraph>
-        <Paragraph variant="help">
+        </p>
+        <p className="leading-relaxed text-sm text-red-400">
           Click on any Pokémon in the evolution tree to explore its evolution line
-        </Paragraph>
-      </Footer>
+        </p>
+      </footer>
     </>
   )
 }

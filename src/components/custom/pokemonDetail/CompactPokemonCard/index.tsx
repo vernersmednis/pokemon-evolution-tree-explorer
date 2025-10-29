@@ -1,11 +1,13 @@
 import type { CompactPokemonCardProps } from './types';
 import { typeColors } from './styles';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Dialog, DialogContent, DialogNavigation } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { PokemonCard } from '@/components/custom';
 import { parentMap } from '@/hooks/pokemon/getEvolutionChain';
 import { useState, useMemo } from 'react';
 import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemon';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 
 // Helper functions for evolution tree traversal
 const findRoot = (pokemon: EvolutionChainNodePokemon) => {
@@ -51,12 +53,30 @@ const CompactPokemonCard = ({ pokemon }: CompactPokemonCardProps) => {
         </TooltipContent>
       </Tooltip>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="flex justify-center">
-          <DialogNavigation initialIndex={initialIndex} variant="pokeball-ghost">
-            {evolutionList.map(pokemon => (
-              <PokemonCard key={pokemon.id} pokemon={pokemon} />
-            ))}
-          </DialogNavigation>
+        <DialogContent className="max-w-fit max-h-fit">
+          <Carousel
+            orientation="vertical"
+            opts={{
+              startIndex: initialIndex,
+            }}
+            className="w-full max-w-md"
+          >
+            <CarouselPrevious variant={"pokeball-ghost"} positioning={"secondary"}>        
+              <ChevronUp />
+              <span>Previous</span>
+            </CarouselPrevious>
+            <CarouselContent className="max-h-[425px] gap-y-8">
+              {evolutionList.map(pokemon => (
+                <CarouselItem key={pokemon.id}>
+                  <PokemonCard pokemon={pokemon} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselNext variant={"pokeball-ghost"} positioning={"secondary"}>
+              <ChevronDown />
+              <span>Next</span>
+            </CarouselNext>
+          </Carousel>
         </DialogContent>
       </Dialog>
     </>

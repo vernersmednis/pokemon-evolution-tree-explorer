@@ -1,6 +1,8 @@
 
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
+import { Item, ItemGroup, ItemMedia, ItemContent, ItemTitle, ItemDescription } from '@/components/ui/item';
+import { Text, Caption } from '@/components/ui/typography';
 import { Lightbulb, Zap, Search as SearchIcon, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -49,19 +51,17 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col gap-12 max-w-6xl mx-auto px-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto px-4">
       
       {/* Hero Section */}
       <Card variant="pokeball" className="overflow-hidden">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Zap className="w-6 h-6 text-red-600" />
-            <CardTitle className="text-2xl">Featured Pokémon</CardTitle>
-          </div>
-          <CardDescription>Explore the most iconic Pokémon and their evolution chains</CardDescription>
+        <CardHeader className="grid grid-cols-[auto_1fr] grid-rows-2 gap-x-2 gap-y-1">
+          <Zap className="w-6 h-6 text-red-600" />
+          <CardTitle className="text-2xl col-start-2">Featured Pokémon</CardTitle>
+          <CardDescription className="col-span-2">Explore the most iconic Pokémon and their evolution chains</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-4">
             {featuredPokemon.map((pokemon) => (
               <Button
                 key={pokemon.id}
@@ -69,8 +69,8 @@ const Dashboard = () => {
                 className="h-auto py-4 flex-col gap-2"
                 onClick={() => handlePokemonClick(pokemon.id)}
               >
-                <span className="font-bold text-lg">{pokemon.name}</span>
-                <span className="text-xs opacity-70">#{pokemon.id}</span>
+                <Text size="lg" weight="bold" as="span">{pokemon.name}</Text>
+                <Caption weight="medium" className="opacity-70">#{pokemon.id}</Caption>
               </Button>
             ))}
           </div>
@@ -79,27 +79,23 @@ const Dashboard = () => {
 
       {/* Recommended Pokemon Section */}
       <Card variant="greatball" className="overflow-hidden">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-6 h-6 text-blue-600" />
-            <CardTitle className="text-2xl">Recommended Evolution Chains</CardTitle>
-          </div>
-          <CardDescription>Curated Pokémon to explore interesting evolution paths</CardDescription>
+        <CardHeader className="grid grid-cols-[auto_1fr] grid-rows-2 gap-x-2 gap-y-1">
+          <TrendingUp className="w-6 h-6 text-blue-600" />
+          <CardTitle className="col-start-2">Recommended Evolution Chains</CardTitle>
+          <CardDescription className="col-span-2">Curated Pokémon to explore interesting evolution paths</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-4">
             {recommendedPokemon.map((pokemon) => (
               <Button
                 key={pokemon.id}
                 variant="greatball-ghost"
-                className="h-auto py-4 flex-col gap-2 items-start text-left"
+                className="h-auto py-4 grid grid-cols-[1fr_auto] grid-rows-2 gap-x-4 gap-y-2 items-start text-left"
                 onClick={() => handlePokemonClick(pokemon.id)}
               >
-                <div className="flex items-center justify-between w-full">
-                  <span className="font-bold text-lg">{pokemon.name}</span>
-                  <span className="text-xs opacity-70">#{pokemon.id}</span>
-                </div>
-                <span className="text-xs font-normal">{pokemon.description}</span>
+                <Text size="lg" weight="bold" as="span">{pokemon.name}</Text>
+                <Caption weight="medium" className="opacity-70">#{pokemon.id}</Caption>
+                <Caption as="span" className="col-span-2">{pokemon.description}</Caption>
               </Button>
             ))}
           </div>
@@ -107,28 +103,31 @@ const Dashboard = () => {
       </Card>
 
       {/* Tips Section */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <Lightbulb className="w-5 h-5 text-red-600" />
-          <h3 className="text-xl font-semibold">Tips & Tricks</h3>
-        </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          {tips.map((tip, index) => {
-            const Icon = tip.icon;
-            return (
-              <Card key={index} variant="pokeball-ghost">
-                <CardContent className="flex gap-3 items-start">
-                  <Icon className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold mb-1">{tip.title}</h4>
-                    <p className="text-sm text-gray-600">{tip.description}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
+      <Card variant="pokeball-ghost" className="overflow-hidden md:col-span-2">
+        <CardHeader className="grid grid-cols-[auto_1fr] grid-rows-2 gap-x-2 gap-y-1">
+          <Lightbulb className="w-6 h-6 text-red-600" />
+          <CardTitle className="col-start-2">Tips & Tricks</CardTitle>
+          <CardDescription className="col-span-2">Learn how to make the most of the Pokémon Evolution Explorer</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ItemGroup className="grid md:grid-cols-2 gap-4">
+            {tips.map((tip, index) => {
+              const Icon = tip.icon;
+              return (
+                <Item key={index} variant="outline" size="default">
+                  <ItemMedia variant="icon">
+                    <Icon className="text-red-600" />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>{tip.title}</ItemTitle>
+                    <ItemDescription>{tip.description}</ItemDescription>
+                  </ItemContent>
+                </Item>
+              );
+            })}
+          </ItemGroup>
+        </CardContent>
+      </Card>
 
     </div>
   );

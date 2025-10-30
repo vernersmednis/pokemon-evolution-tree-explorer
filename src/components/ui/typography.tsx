@@ -9,7 +9,7 @@ const textVariants = cva(
   "leading-normal",
   {
     variants: {
-      size: {lg: "text-lg", base: "text-base",sm: "text-sm",xs: "text-xs" },
+      size: {lg: "text-lg", base: "text-base",sm: "text-sm", xs: "text-xs" },
       variant: {default: "text-foreground" },
       weight: { 
         normal: "font-normal", medium: "font-medium",
@@ -41,20 +41,21 @@ const captionVariants = cva(
     variants: {
       variant: { default: "text-muted-foreground" },
       weight: { normal: "font-normal", medium: "font-medium", semibold: "font-semibold" },
+      italic: { true: "italic", false: "" },
     },
-    defaultVariants: { variant: "default", weight: "normal" },
+    defaultVariants: { variant: "default", weight: "normal", italic: false },
   }
 )
 
 function Caption({
-    className, variant, weight, as: Comp = "span", asChild = false, ...props
+    className, variant, weight, italic, as: Comp = "span", asChild = false, ...props
 }: React.ComponentProps<"span"> & VariantProps<typeof captionVariants> & {
     as?: "span" | "p" | "div"; asChild?: boolean
 }) {
   const Component = (asChild ? Slot : Comp) as React.ElementType
   return (
     <Component
-      className={cn(captionVariants({ variant, weight, className }))}
+      className={cn(captionVariants({ variant, weight, italic, className }))}
       {...props}
     />
   )

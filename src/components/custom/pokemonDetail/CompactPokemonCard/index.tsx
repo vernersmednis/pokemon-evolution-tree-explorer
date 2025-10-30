@@ -3,6 +3,8 @@ import { typeColors } from './styles';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Badge } from "@/components/ui/badge";
+import { Text } from '@/components/ui/typography';
 import { PokemonCard } from '@/components/custom';
 import { parentMap } from '@/hooks/pokemon/getEvolutionChain';
 import { useState, useMemo } from 'react';
@@ -38,18 +40,18 @@ const CompactPokemonCard = ({ pokemon }: CompactPokemonCardProps) => {
             <img src={imageUrl} alt={pokemon.name} className="w-8 h-8 object-contain flex-shrink-0" />
             
             {/* Pokemon Name */}
-            <span className="text-sm font-medium text-gray-800 truncate">
+            <Text size="sm" weight="medium" as="span" className="text-gray-800 truncate">
               {pokemon.name}
-            </span>
+            </Text>
             
             {/* Type Badge */}
-            <span className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ${bgColor}`}>
+            <Badge className={bgColor}>
               {pokemonType}
-            </span>
+            </Badge>
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Click to view details</p>
+          <Text size="sm" as="p">Click to view details</Text>
         </TooltipContent>
       </Tooltip>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -62,7 +64,7 @@ const CompactPokemonCard = ({ pokemon }: CompactPokemonCardProps) => {
           >
             <CarouselPrevious variant={"pokeball-ghost"} positioning={"secondary"}>        
               <ChevronUp />
-              <span>Previous</span>
+              <Text size="sm" as="span">Previous</Text>
             </CarouselPrevious>
             <CarouselContent className="max-h-[425px] gap-y-8">
               {evolutionList.map(pokemon => (
@@ -73,7 +75,7 @@ const CompactPokemonCard = ({ pokemon }: CompactPokemonCardProps) => {
             </CarouselContent>
             <CarouselNext variant={"pokeball-ghost"} positioning={"secondary"}>
               <ChevronDown />
-              <span>Next</span>
+              <Text size="sm" as="span">Next</Text>
             </CarouselNext>
           </Carousel>
         </DialogContent>

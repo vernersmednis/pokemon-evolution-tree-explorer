@@ -2,4 +2,6 @@ import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemo
 
 export interface CompactEvolutionChainNodeProps {
   pokemon: EvolutionChainNodePokemon;
+  depth?: number;
+  branchIndex?: number;
 }

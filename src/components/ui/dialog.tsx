@@ -2,13 +2,9 @@
 
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { XIcon, ChevronUp, ChevronDown } from "lucide-react"
-import { Button, buttonVariants } from "./button"
-import type { VariantProps } from "class-variance-authority"
+import { XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-
-type ButtonVariant = VariantProps<typeof buttonVariants>["variant"]
 
 function Dialog({
   ...props
@@ -133,38 +129,6 @@ function DialogDescription({
   )
 }
 
-// Generic list navigation with Previous/Next buttons
-function DialogNavigation({
-  initialIndex = 0,
-  children,
-  variant = "default",
-  ...props
-}: Omit<React.ComponentProps<"div">, "children"> & {
-  initialIndex?: number
-  children: React.ReactNode[] // Array of components to navigate through
-  variant?: ButtonVariant
-}) {
-  const [index, setIndex] = React.useState(initialIndex)
-
-  React.useEffect(() => setIndex(initialIndex), [initialIndex])
-
-  return (
-    <div className="flex flex-col gap-4" {...props}>
-      <div className="flex justify-center">
-        <Button onClick={() => setIndex(index - 1)} disabled={index === 0} variant={variant} size="sm" className="w-32">
-          <ChevronUp className="mr-2 size-4" />Previous
-        </Button>
-      </div>
-      {React.Children.toArray(children)[index]}
-      <div className="flex justify-center">
-        <Button onClick={() => setIndex(index + 1)} disabled={index === React.Children.count(children) - 1} variant={variant} size="sm" className="w-32">
-          Next<ChevronDown className="ml-2 size-4" />
-        </Button>
-      </div>
-    </div>
-  )
-}
-
 export {
   Dialog,
   DialogClose,
@@ -172,7 +136,6 @@ export {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogNavigation,
   DialogOverlay,
   DialogPortal,
   DialogTitle,

@@ -120,7 +120,9 @@ function Carousel({
       <div
         onKeyDownCapture={handleKeyDown}
         className={cn(
-          "relative grid grid-cols-[min-content_auto] grid-rows-[auto_min-content_auto] gap-4 ",
+          orientation === "horizontal" ?
+          "relative grid grid-cols-[min-content_auto] grid-rows-[auto_min-content_auto] gap-1 " :
+          "relative grid grid-cols-[min-content_auto] grid-rows-[min-content_auto_auto] gap-1 ",
           className
         )}
         role="region"
@@ -177,19 +179,10 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
     api.on("reInit", updateSize)
     api.on("select", updateSize)
 
-    // Observe slide elements for size changes (images, async content, etc.).
-    const slides = api.slideNodes()
-    const resizeObserver = new ResizeObserver(() => {
-      updateSize()
-    })
-
-    slides.forEach(slide => resizeObserver.observe(slide))
-
     // Cleanup: remove event listeners and disconnect the observer.
     return () => {
       api.off("reInit", updateSize)
       api.off("select", updateSize)
-      resizeObserver.disconnect()
     }
   }, [api])
 
@@ -197,7 +190,7 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
     <div
       ref={carouselRef}
       className={cn(
-        "overflow-hidden w-fit h-fit justify-self-center",
+        "overflow-hidden w-fit h-fit justify-self-center p-2",
         orientation === "horizontal" ? "col-span-2 row-start-1" : "col-start-1 row-start-2"
       )}
       data-slot="carousel-content"
@@ -240,42 +233,39 @@ function CarouselPrevious({
   size = "icon",
   positioning = "primary",
   ...props
-}: React.ComponentProps<typeof Button> & { positioning?: "primary" | "secondary" | "none" }) {
+}: React.ComponentProps<typeof Button> & { positioning?: "primary" | "secondary" }) {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+
+  const positionClasses = {
+    horizontal: {
+      primary: "[&>span]:sr-only absolute size-8 rounded-full top-1/2 -left-12 -translate-y-1/2",
+      secondary: "w-fit col-start-1 row-start-2 justify-self-start"
+    },
+    vertical: {
+      primary: "[&>span]:sr-only absolute size-8 rounded-full -top-12 left-1/2 -translate-x-1/2 rotate-90",
+      secondary: "w-fit col-start-1 row-start-1 justify-self-center"
+    }
+  } as const
+
+  const buttonClasses = positionClasses[orientation || "horizontal"][positioning]
 
   return (
     <Button
       data-slot="carousel-previous"
       variant={variant}
       size={size}
-      className={cn(
-        positioning === "primary" && "absolute size-8 rounded-full",
-        positioning === "primary" && (orientation === "horizontal"
-          ? "top-1/2 -left-12 -translate-y-1/2"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90"),
-        positioning === "secondary" && "w-fit",
-        positioning === "secondary" && (orientation === "horizontal"
-          ? "col-start-1 row-start-2 col-span-1 justify-self-start"
-          : "col-start-1 row-start-1 justify-self-center"),
-        className
-      )}
+      className={cn(buttonClasses, className)}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
     >
       {orientation == "horizontal" ? (
         <>
-          <ArrowLeft />
-          <span className={`${positioning === "primary" ? "sr-only" : ""}`}>
-            Previous slide
-          </span>
+          <ArrowLeft /><span>Previous slide</span>
         </>
       ) : (
         <>
-          <ChevronUp />
-          <span className={`${positioning === "primary" ? "sr-only" : ""}`}>
-            Previous slide
-          </span>
+          <ChevronUp /><span>Previous slide</span>
         </>
       )}
     </Button>
@@ -288,42 +278,39 @@ function CarouselNext({
   size = "icon",
   positioning = "primary",
   ...props
-}: React.ComponentProps<typeof Button> & { positioning?: "primary" | "secondary" | "none" }) {
+}: React.ComponentProps<typeof Button> & { positioning?: "primary" | "secondary" }) {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
+
+  const positionClasses = {
+    horizontal: {
+      primary: "[&>span]:sr-only absolute size-8 rounded-full top-1/2 -right-12 -translate-y-1/2",
+      secondary: "w-fit col-start-2 row-start-2 justify-self-end"
+    },
+    vertical: {
+      primary: "[&>span]:sr-only absolute size-8 rounded-full -bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+      secondary: "w-fit col-start-1 row-start-3 justify-self-center"
+    }
+  } as const
+
+  const buttonClasses = positionClasses[orientation || "horizontal"][positioning]
 
   return (
     <Button
       data-slot="carousel-next"
       variant={variant}
       size={size}
-      className={cn(
-        positioning === "primary" && "absolute size-8 rounded-full",
-        positioning === "primary" && (orientation === "horizontal"
-          ? "top-1/2 -right-12 -translate-y-1/2"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90"),
-        positioning === "secondary" && "w-fit",
-        positioning === "secondary" && (orientation === "horizontal"
-          ? "col-start-2 row-start-2 col-span-1 justify-self-end"
-          : "col-start-1 row-start-3 justify-self-center"),
-        className
-      )}
+      className={cn(buttonClasses, className)}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}
     >
       {orientation == "horizontal" ? (
         <>
-          <span className={`${positioning === "primary" ? "sr-only" : ""}`}>
-            Next slide
-          </span>
-          <ArrowRight />
+          <span>Next slide</span><ArrowRight />
         </>
       ) : (
         <>
-          <ChevronDown />
-          <span className={`${positioning === "primary" ? "sr-only" : ""}`}>
-            Next slide
-          </span>
+          <ChevronDown /><span>Next slide</span>
         </>
       )}
     </Button>
@@ -402,6 +389,8 @@ function CarouselProgressIndicator({
       )}
       role="navigation"
       aria-label="Carousel progress"
+      aria-roledescription="carousel progress indicator"
+      data-slot="carousel-progress-indicator"
       {...props}
     >
       {displayLabels.map((label, index) => {

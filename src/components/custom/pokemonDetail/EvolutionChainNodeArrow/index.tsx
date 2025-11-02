@@ -1,3 +1,4 @@
+import { Typography } from '@/components/ui/typography';
 import type { EvolutionChainNodeArrowProps } from './types';
 
 const EvolutionChainNodeArrow = ({ pokemon }: EvolutionChainNodeArrowProps) => {
@@ -15,16 +16,16 @@ const EvolutionChainNodeArrow = ({ pokemon }: EvolutionChainNodeArrowProps) => {
         <div className="flex flex-col">
           {pokemon.evolutionTrigger && (
             <div className="bg-gray-100 rounded px-2 py-1">
-              <span className="text-gray-700 text-xs font-semibold">
+              <Typography variant="caption" className="text-gray-700">
                 {pokemon.evolutionTrigger}
-              </span>
+              </Typography>
             </div>
           )}
           {pokemon.evolutionCondition && (
             <div className="bg-gray-50 rounded px-2 py-1">
-              <span className="text-gray-600 text-xs">
+              <Typography variant="caption" className="text-gray-600">
                 {pokemon.evolutionCondition}
-              </span>
+              </Typography>
             </div>
           )}
         </div>

@@ -1,6 +1,6 @@
-import { Label } from "@/components/ui/label";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Typography } from "@/components/ui/typography";
 import type { PokemonCardProps } from "./types";
 import { typeColors } from "./styles";
 
@@ -12,42 +12,46 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
     pokemon.sprites?.other?.["official-artwork"]?.front_default || "";
 
   return (
-    <Card variant="pokeball-outline-secondary" className="p-6 w-64">
-      <CardHeader className="flex flex-col items-between p-0">
-        <span className="text-sm font-semibold text-gray-600">#{pokemon.id}</span>
+    <Card className="w-64" variant="pokeball-outline-secondary">
+      <CardHeader>
+        <Typography variant="caption" className="text-gray-600">#{pokemon.id}</Typography>
         <CardTitle className="text-left">
           {pokemon.name}
         </CardTitle>
       </CardHeader>
 
-      <div className="flex flex-row justify-center">
-        <img
-          src={imageUrl}
-          alt={pokemon.name}
-          className="w-32 h-32 object-contain"
-        />
-      </div>
-
-      <div className="flex flex-row justify-center">
-        <Badge className={bgColor}>
-          {pokemonType}
-        </Badge>
-      </div>
-
-      <p className="leading-relaxed text-xs text-gray-500 italic">
-        {pokemon.species?.name || pokemon.name}
-      </p>
-
-      <div className="flex flex-row justify-between">
-        <div className="flex flex-col items-center">
-          <Label className="text-xs font-semibold text-gray-700">Height</Label>
-          <span className="font-bold text-base">{(pokemon.height / 10).toFixed(1)}m</span>
+      <CardContent className="flex flex-col gap-4">
+        <div className="flex flex-row justify-center">
+          <img
+            src={imageUrl}
+            alt={pokemon.name}
+            className="w-32 h-32 object-contain"
+          />
         </div>
-        <div className="flex flex-col items-center">
-          <Label className="text-xs font-semibold text-gray-700">Weight</Label>
-          <span className="font-bold text-base">{(pokemon.weight / 10).toFixed(1)}kg</span>
+
+        <div className="flex flex-row justify-center">
+          <Badge className={bgColor}>
+            {pokemonType}
+          </Badge>
         </div>
-      </div>
+
+        <Typography variant="caption" as="p" className="leading-relaxed text-gray-500 text-center italic">
+          {pokemon.species?.name || pokemon.name}
+        </Typography>
+      </CardContent>
+
+      <CardFooter>
+        <div className="flex flex-row justify-between w-full">
+          <div className="flex flex-col items-center">
+            <Typography variant="caption" as="label" className="text-gray-700">Height</Typography>
+            <Typography variant="body" as="span" className="font-bold">{(pokemon.height / 10).toFixed(1)}m</Typography>
+          </div>
+          <div className="flex flex-col items-center">
+            <Typography variant="caption" as="label" className="text-gray-700">Weight</Typography>
+            <Typography variant="body" as="span" className="font-bold">{(pokemon.weight / 10).toFixed(1)}kg</Typography>
+          </div>
+        </div>
+      </CardFooter>
     </Card>
   );
 };

@@ -1,10 +1,11 @@
 import type { CompactPokemonCardProps } from './types';
 import { typeColors } from './styles';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselProgressIndicator } from "@/components/ui/carousel";
 import { Badge } from "@/components/ui/badge";
-import { Text } from '@/components/ui/typography';
+import { Typography } from '@/components/ui/typography';
+import { Card, CardContent } from "@/components/ui/card";
 import { PokemonCard } from '@/components/custom';
 import { parentMap } from '@/hooks/pokemon/getEvolutionChain';
 import { useState, useMemo } from 'react';
@@ -44,27 +45,39 @@ const CompactPokemonCard = ({ pokemon }: CompactPokemonCardProps) => {
     <>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="flex items-center gap-2 p-2 border border-gray-300 rounded-lg bg-white shadow-sm cursor-pointer" onClick={() => setDialogOpen(true)}>
-            {/* Pokemon Image */}
-            <img src={imageUrl} alt={pokemon.name} className="w-8 h-8 object-contain flex-shrink-0" />
-            
-            {/* Pokemon Name */}
-            <Text size="sm" weight="medium" as="span" className="text-gray-800 truncate">
-              {pokemon.name}
-            </Text>
-            
-            {/* Type Badge */}
-            <Badge className={bgColor}>
-              {pokemonType}
-            </Badge>
-          </div>
+          <Card 
+            variant="pokeball-outline"
+            className="cursor-pointer py-0"
+            onClick={() => setDialogOpen(true)}
+          >
+            <CardContent className="flex items-center gap-2 p-2">
+              {/* Pokemon Image */}
+              <img src={imageUrl} alt={pokemon.name} className="w-8 h-8 object-contain flex-shrink-0" />
+              
+              {/* Pokemon Name */}
+              <Typography variant="caption" as="span" className="truncate">
+                {pokemon.name}
+              </Typography>
+              
+              {/* Type Badge */}
+              <Badge className={bgColor}>
+                {pokemonType}
+              </Badge>
+            </CardContent>
+          </Card>
         </TooltipTrigger>
         <TooltipContent>
-          <Text size="sm" as="p">Click to view details</Text>
+          <Typography variant="caption" as="p" className="text-white">Click to view details</Typography>
         </TooltipContent>
       </Tooltip>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="w-fit h-fit">
+          <DialogTitle className="sr-only">
+            {pokemon.name} Evolution Chain
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Browse through the evolution chain of {pokemon.name}. Use the arrows to navigate between evolution stages.
+          </DialogDescription>
           <Carousel
             orientation="vertical"
             opts={{

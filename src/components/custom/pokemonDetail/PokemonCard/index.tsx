@@ -1,7 +1,6 @@
-import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Text, Caption } from "@/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import type { PokemonCardProps } from "./types";
 import { typeColors } from "./styles";
 
@@ -13,9 +12,9 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
     pokemon.sprites?.other?.["official-artwork"]?.front_default || "";
 
   return (
-    <Card variant="pokeball-outline-secondary" className="w-64">
+    <Card className="w-64" variant="pokeball-outline-secondary">
       <CardHeader>
-        <Caption weight="semibold" className="text-gray-600">#{pokemon.id}</Caption>
+        <Typography variant="caption" className="text-gray-600">#{pokemon.id}</Typography>
         <CardTitle className="text-left">
           {pokemon.name}
         </CardTitle>
@@ -36,20 +35,20 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
           </Badge>
         </div>
 
-        <Caption italic as="p" className="leading-relaxed text-gray-500 text-center">
+        <Typography variant="caption" as="p" className="leading-relaxed text-gray-500 text-center italic">
           {pokemon.species?.name || pokemon.name}
-        </Caption>
+        </Typography>
       </CardContent>
 
       <CardFooter>
         <div className="flex flex-row justify-between w-full">
           <div className="flex flex-col items-center">
-            <Label className="text-xs font-semibold text-gray-700">Height</Label>
-            <Text size="base" weight="bold" as="span">{(pokemon.height / 10).toFixed(1)}m</Text>
+            <Typography variant="caption" as="label" className="text-gray-700">Height</Typography>
+            <Typography variant="body" as="span" className="font-bold">{(pokemon.height / 10).toFixed(1)}m</Typography>
           </div>
           <div className="flex flex-col items-center">
-            <Label className="text-xs font-semibold text-gray-700">Weight</Label>
-            <Text size="base" weight="bold" as="span">{(pokemon.weight / 10).toFixed(1)}kg</Text>
+            <Typography variant="caption" as="label" className="text-gray-700">Weight</Typography>
+            <Typography variant="body" as="span" className="font-bold">{(pokemon.weight / 10).toFixed(1)}kg</Typography>
           </div>
         </div>
       </CardFooter>

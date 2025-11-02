@@ -1,5 +1,5 @@
 import { CompactPokemonCard } from "@/components/custom";
-import { Caption } from "@/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import type { CompactEvolutionChainNodeProps } from "./types";
 
 const CompactEvolutionChainNode = ({ 
@@ -12,9 +12,9 @@ const CompactEvolutionChainNode = ({
   return (
     <>
       <div className="flex items-center gap-2 mb-2">
-        <Caption weight="semibold" className="text-gray-600 w-12 text-right">
+        <Typography variant="caption">
           {evolutionNumber}
-        </Caption>
+        </Typography>
         <div className="flex-1">
           <CompactPokemonCard pokemon={pokemon} />
         </div>

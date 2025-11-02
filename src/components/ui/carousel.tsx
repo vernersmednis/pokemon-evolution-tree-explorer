@@ -148,7 +148,6 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
     // Compute and set the content's natural width/height from all slides.
     const updateSize = () => {
       const slides = api.slideNodes()
-      console.log('Slides:', slides)
 
       // Nothing to do when there are no slides.
       if (slides.length === 0) return
@@ -351,33 +350,44 @@ function CarouselProgressIndicator({
   const [selectedIndex, setSelectedIndex] = React.useState(0)
   const [slideCount, setSlideCount] = React.useState(0)
 
+  // Initialize and synchronize progress indicator with carousel state
   React.useEffect(() => {
     if (!api) return
 
+    // Set initial slide count and selected index from the carousel API
     setSlideCount(api.scrollSnapList().length)
     setSelectedIndex(api.selectedScrollSnap())
 
+    // Update selected index whenever the carousel slide changes
     const handleSelect = () => setSelectedIndex(api.selectedScrollSnap())
     
+    // Subscribe to carousel select events
     api.on("select", handleSelect)
+    
+    // Cleanup: unsubscribe from events when component unmounts or API changes
     return () => {
       api.off("select", handleSelect)
     }
   }, [api])
 
+  // Handle clicks on progress indicator items
   const handleItemClick = (index: number) => {
+    // If custom onSelect handler is provided, use it
     if (onSelect) {
       onSelect(index)
     } else {
+      // Otherwise, scroll carousel to the clicked index
       api?.scrollTo(index)
     }
   }
 
+  // Generate the appropriate variant string based on active state
   const getItemVariant = (isActive: boolean) => {
     const suffix = isActive ? "-active" : ""
     return `${variant}${suffix}` as const
   }
 
+  // Use provided labels or generate default numeric labels (1, 2, 3, ...)
   const displayLabels = labels || Array.from({ length: slideCount }, (_, i) => `${i + 1}`)
 
   return (

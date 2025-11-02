@@ -59,6 +59,7 @@ function Typography({
   const Component = (asChild ? Slot : Comp) as React.ElementType
   return (
     <Component
+      data-slot="typography"
       className={cn(typographyVariants({ variant, className }))}
       {...props}
     />

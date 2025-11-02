@@ -16,14 +16,14 @@ const EvolutionChainNodeArrow = ({ pokemon }: EvolutionChainNodeArrowProps) => {
         <div className="flex flex-col">
           {pokemon.evolutionTrigger && (
             <div className="bg-gray-100 rounded px-2 py-1">
-              <Typography variant="caption" className="text-gray-700">
+              <Typography variant="caption">
                 {pokemon.evolutionTrigger}
               </Typography>
             </div>
           )}
           {pokemon.evolutionCondition && (
             <div className="bg-gray-50 rounded px-2 py-1">
-              <Typography variant="caption" className="text-gray-600">
+              <Typography variant="caption">
                 {pokemon.evolutionCondition}
               </Typography>
             </div>

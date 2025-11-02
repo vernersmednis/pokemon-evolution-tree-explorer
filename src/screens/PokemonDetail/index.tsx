@@ -10,26 +10,32 @@ const PokemonDetail = () => {
 
   const [useVertical, setUseVertical] = useState(false);
   const verticalRef = useRef(null);
+  const initialScrollWidthRef = useRef(-1);
+
+  // Reset initial scroll width when evolution chain changes (new Pokemon)
+  useLayoutEffect(() => {
+    initialScrollWidthRef.current = -1;
+    setUseVertical(false);
+  }, []);
 
   // Dynamic Overflow Detection for switching between mobile view and desktop view
   useLayoutEffect(() => {
-
-    // We will use initialScrollWith (set later) for switching to vertical view
-    // (otherwise using regular scrollWidth we would experience stuttering on resizing)
-    let initialScrollWidth = -1;
-
     const checkOverflow = () => {
       if (verticalRef.current) {
         const { scrollWidth } = verticalRef.current;
         const windowWidth = window.innerWidth;
-        if (scrollWidth !== 0 && initialScrollWidth === -1) initialScrollWidth = scrollWidth;
-        if (initialScrollWidth !== -1 ) setUseVertical(initialScrollWidth > windowWidth);
+        if (scrollWidth !== 0 && initialScrollWidthRef.current === -1) 
+          initialScrollWidthRef.current = scrollWidth;
+        if (initialScrollWidthRef.current !== -1) 
+          setUseVertical(initialScrollWidthRef.current > windowWidth);
       }
     };
+    
     checkOverflow();
     window.addEventListener("resize", checkOverflow);
     return () => window.removeEventListener("resize", checkOverflow);
   }, [evolutionChain]);
+
 
 
   if (isLoading) return <div>Loading evolution chain...</div>;

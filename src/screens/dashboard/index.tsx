@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { Item, ItemGroup, ItemMedia, ItemContent, ItemTitle, ItemDescription } from '@/components/ui/item';
-import { Typography } from '@/components/ui/typography';
+import { Text, Caption } from '@/components/ui/typography';
 import { Lightbulb, Zap, Search as SearchIcon, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -69,8 +69,8 @@ const Dashboard = () => {
                 className="h-auto py-4 flex-col gap-2"
                 onClick={() => handlePokemonClick(pokemon.id)}
               >
-                <Typography as="span" variant="subtitle">{pokemon.name}</Typography>
-                <Typography as="span" variant="pokeball-caption">#{pokemon.id}</Typography>
+                <Text size="lg" weight="bold" as="span">{pokemon.name}</Text>
+                <Caption weight="medium" className="opacity-70">#{pokemon.id}</Caption>
               </Button>
             ))}
           </div>
@@ -93,9 +93,9 @@ const Dashboard = () => {
                 className="h-auto py-4 grid grid-cols-[1fr_auto] grid-rows-2 gap-x-4 gap-y-2 items-start text-left"
                 onClick={() => handlePokemonClick(pokemon.id)}
               >
-                <Typography as="span" variant="subtitle" className="col-start-1">{pokemon.name}</Typography>
-                <Typography as="span" variant="greatball-caption" className="col-start-2 row-start-1">{pokemon.id}</Typography>
-                <Typography as="span" variant="caption" className="col-span-2">{pokemon.description}</Typography>
+                <Text size="lg" weight="bold" as="span">{pokemon.name}</Text>
+                <Caption weight="medium" className="opacity-70">#{pokemon.id}</Caption>
+                <Caption as="span" className="col-span-2">{pokemon.description}</Caption>
               </Button>
             ))}
           </div>
@@ -103,7 +103,7 @@ const Dashboard = () => {
       </Card>
 
       {/* Tips Section */}
-      <Card className="overflow-hidden md:col-span-2">
+      <Card variant="pokeball-ghost" className="overflow-hidden md:col-span-2">
         <CardHeader className="grid grid-cols-[auto_1fr] grid-rows-2 gap-x-2 gap-y-1">
           <Lightbulb className="w-6 h-6 text-red-600" />
           <CardTitle className="col-start-2">Tips & Tricks</CardTitle>
@@ -115,7 +115,7 @@ const Dashboard = () => {
               const Icon = tip.icon;
               return (
                 <Item key={index} variant="outline" size="default">
-                  <ItemMedia>
+                  <ItemMedia variant="icon">
                     <Icon className="text-red-600" />
                   </ItemMedia>
                   <ItemContent>

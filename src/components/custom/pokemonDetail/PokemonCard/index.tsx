@@ -14,7 +14,7 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
   return (
     <Card className="w-64" variant="pokeball-outline-secondary">
       <CardHeader>
-        <Typography variant="caption" className="text-gray-600">#{pokemon.id}</Typography>
+        <Typography variant="caption">#{pokemon.id}</Typography>
         <CardTitle className="text-left">
           {pokemon.name}
         </CardTitle>
@@ -35,7 +35,7 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
           </Badge>
         </div>
 
-        <Typography variant="caption" as="p" className="leading-relaxed text-gray-500 text-center italic">
+        <Typography variant="caption" as="p">
           {pokemon.species?.name || pokemon.name}
         </Typography>
       </CardContent>
@@ -43,12 +43,12 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
       <CardFooter>
         <div className="flex flex-row justify-between w-full">
           <div className="flex flex-col items-center">
-            <Typography variant="caption" as="label" className="text-gray-700">Height</Typography>
-            <Typography variant="body" as="span" className="font-bold">{(pokemon.height / 10).toFixed(1)}m</Typography>
+            <Typography variant="caption" as="label">Height</Typography>
+            <Typography variant="subtitle" as="span">{(pokemon.height / 10).toFixed(1)}m</Typography>
           </div>
           <div className="flex flex-col items-center">
-            <Typography variant="caption" as="label" className="text-gray-700">Weight</Typography>
-            <Typography variant="body" as="span" className="font-bold">{(pokemon.weight / 10).toFixed(1)}kg</Typography>
+            <Typography variant="caption" as="label">Weight</Typography>
+            <Typography variant="subtitle" as="span">{(pokemon.weight / 10).toFixed(1)}kg</Typography>
           </div>
         </div>
       </CardFooter>

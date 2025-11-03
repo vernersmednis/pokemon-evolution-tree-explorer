@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearchPokemon } from '@/hooks/pokemon/searchPokemon';
+import type { SearchProps } from './types';
+import { cn } from "@/lib/utils"
 
-const Search = () => {
+const Search = ({ className }: SearchProps) => {
   const [inputValue, setInputValue] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
@@ -24,11 +26,11 @@ const Search = () => {
   }, [pokemonData, isLoading, error, navigate]);
     
   return (
-    <div className="flex justify-center gap-2">
+    <div className={cn(className, "flex justify-center gap-2")}>
       <Input
         type="text"
         placeholder="Search for a Pokémon (e.g., pikachu, charizard)..."
-        className="w-128"
+        className="w-full"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />

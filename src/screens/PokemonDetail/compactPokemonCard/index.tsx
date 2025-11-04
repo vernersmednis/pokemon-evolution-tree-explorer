@@ -6,7 +6,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Badge } from "@/components/ui/badge";
 import { Typography } from '@/components/ui/typography';
 import { Card, CardContent } from "@/components/ui/card";
-import { PokemonCard } from '@/components/custom';
+import PokemonCard from '../pokemonCard';
 import { parentMap } from '@/hooks/pokemon/getEvolutionChain';
 import { useState, useMemo } from 'react';
 import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemon';

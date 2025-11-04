@@ -1,4 +1,4 @@
-import { CompactPokemonCard } from "@/components/custom";
+import CompactPokemonCard from "../compactPokemonCard";
 import { Typography } from "@/components/ui/typography";
 import type { CompactEvolutionChainNodeProps } from "./types";
 

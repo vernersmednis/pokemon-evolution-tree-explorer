@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# Release v0.9
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Simple release notes for the first public-ish release.
 
-Currently, two official plugins are available:
+Summary
+-------
+v0.9 focuses on UI screens and polish: a responsive dashboard, a detailed Pokémon screen with evolution tree, improved search, and a unified typography/ui system.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Key screens & features
+----------------------
+- Dashboard
+	- Featured & recommended Pokémon panels
+	- Tips & Tricks card
+	- Quick navigation to Pokémon detail pages
 
-## React Compiler
+- Pokémon Detail
+	- Evolution tree visualization (horizontal desktop / vertical mobile)
+	- Compact and full Pokemon cards with images, types, height/weight
+	- Responsive overflow detection for layout switching
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Search
+	- Header search with direct navigation to detail pages and the home (dashboard) page
+	- `Search` component accepts a `className` so it can be placed or sized by parent
 
-## Expanding the ESLint configuration
+UI / Components
+---------------
+- Central `Typography` component used across the app (replaces ad-hoc text classes)
+- Shadcn/UI primitives included:
+    - `Badge`, `Input`, `Separator`, `Tooltip`, `Dialog`,  `Item` (ItemGroup / ItemMedia / ItemContent)
+    - `Card` (many custom themed variants: pokeball, greatball, ghost, outline, etc.)
+    - `Button` (many custom themed variants: pokeball, greatball, ghost, outline, etc.)
+    - `Carousel` (custom features: `CarouselProgressIndicator`, automatic width and height detection for `CarouselItem` content list, secondary positioning for "Next" and "Previous" buttons)
+    - `Typography` (entirely custom component with centralized text variants)
+- Custom / feature components:
+    - Evolution tree pieces: `EvolutionChainNode`, `CompactEvolutionChainNode`, `EvolutionChainNodeArrow`
+    - Pokemon cards: `PokemonCard`, `CompactPokemonCard`
+    - Search component (pluggable for header or in-page usage)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Data & hooks
+------------
+- TanStack Query (hooks) used for data fetching and caching
+- Hooks: `useGetEvolutionChain`, `useSearchPokemon` (search integration)
+- Data source: PokéAPI (third-party public API)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Developer notes (short)
+-----------------------
+- How to run: install deps (npm install) and start dev server (npm run dev) (use your usual package manager)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Credits
+-------
+Data provided by PokéAPI (https://pokeapi.co/)

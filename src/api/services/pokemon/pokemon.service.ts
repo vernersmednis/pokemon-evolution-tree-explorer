@@ -5,11 +5,6 @@ export const getPokemon = (id: string) => {
   return response;
 };
 
-export const searchPokemon = (name: string) => {
-  const response = api.get(`/pokemon/${name}`);
-  return response;
-};
-
 export const getPokemonSpecies = (id: string) => {
   const response = api.get(`/pokemon-species/${id}`);
   return response;

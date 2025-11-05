@@ -1,29 +1,21 @@
-
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSearchPokemon } from '@/hooks/pokemon/searchPokemon';
 import type { SearchProps } from './types';
 import { cn } from "@/lib/utils"
 
 const Search = ({ className }: SearchProps) => {
-  const [inputValue, setInputValue] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
 
-  const { data: pokemonData, isLoading, error } = useSearchPokemon(searchTerm);
-    
+  const navigate = useNavigate()
+  const [searchValue, setSearchValue] = useState('')
+
   const handleSearch = () => {
-    setSearchTerm(inputValue.trim().toLowerCase());
-  };
-
-  // Navigate to Pokemon detail page when a Pokemon is found
-  useEffect(() => {
-    if (pokemonData?.data?.id && !isLoading && !error) {
-      navigate(`/pokemon/${pokemonData.data.id}`);
+    if (searchValue.trim()) {
+      navigate(`/pokemon/${searchValue.trim().toLowerCase()}`)
+      setSearchValue('')
     }
-  }, [pokemonData, isLoading, error, navigate]);
+  }
     
   return (
     <div className={cn(className, "flex justify-center gap-2")}>
@@ -31,8 +23,8 @@ const Search = ({ className }: SearchProps) => {
         type="text"
         placeholder="Search for a Pokémon (e.g., pikachu, charizard)..."
         className="w-full"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
       />
       <Button 
         className="flex justify-center items-center gap-1" 

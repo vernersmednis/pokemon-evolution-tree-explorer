@@ -44,7 +44,7 @@ Data & hooks
 
 Developer notes (short)
 -----------------------
-- How to run: install deps (npm install) and start dev server (npm run dev) (use your usual package manager)
+- How to run: install deps (npm install) and start dev server (npm run dev)
 
 Credits
 -------

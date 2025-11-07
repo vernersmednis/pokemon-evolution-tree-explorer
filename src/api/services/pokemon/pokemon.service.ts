@@ -1,7 +1,7 @@
 import { api } from "@/api/api";
 
-export const getPokemon = (id: string) => {
-  const response = api.get(`/pokemon/${id}`);
+export const getPokemon = (name: string) => {
+  const response = api.get(`/pokemon/${name}`);
   return response;
 };
 

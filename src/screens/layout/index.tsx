@@ -1,14 +1,13 @@
-import "../App.css";
 import { useNavigate, Outlet } from "react-router-dom";
-import { Search } from "@/components/custom";
+
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
+import Search from "./search";
 // QueryClientProvider is provided in main.tsx
 
 function Layout() {
   const navigate = useNavigate();
-
   return (
     <>
       {/* Header Section */}

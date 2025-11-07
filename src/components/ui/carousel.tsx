@@ -92,17 +92,26 @@ function Carousel({
     setApi(api)
   }, [api, setApi])
 
+  const handleReInit = React.useCallback(() => {
+    onSelect(api)
+    if (opts?.startIndex !== undefined) {
+      api!.scrollTo(opts.startIndex, true) // true means jump instantly without animation
+    }
+  }, [api, onSelect, opts?.startIndex])
+
   React.useEffect(() => {
     if (!api) return
-    onSelect(api)
-    api.on("reInit", onSelect)
+    api.on("init", handleReInit)
+    api.on("reInit", handleReInit)
     api.on("select", onSelect)
 
     return () => {
+      api?.off("init", handleReInit)
+      api?.off("reInit", handleReInit)
       api?.off("select", onSelect)
     }
-  }, [api, onSelect])
-
+  }, [api, handleReInit, onSelect])
+  
   return (
     <CarouselContext.Provider
       value={{

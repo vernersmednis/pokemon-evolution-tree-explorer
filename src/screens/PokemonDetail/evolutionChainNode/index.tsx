@@ -1,4 +1,5 @@
-import { PokemonCard, EvolutionChainNodeArrow } from '@/components/custom';
+import PokemonCard from '../pokemonCard';
+import EvolutionChainNodeArrow from '../evolutionChainNodeArrow';
 import type { EvolutionChainNodeProps } from './types';
 
 

@@ -137,6 +137,7 @@ function Carousel({
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
+        data-testid="carousel"
         {...props}
       >
         {children}
@@ -202,6 +203,7 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
         orientation === "horizontal" ? "col-span-2 row-start-1" : "col-start-1 row-start-2"
       )}
       data-slot="carousel-content"
+      data-testid="carousel-content"
     >
       <div
         className={cn(
@@ -226,6 +228,7 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
       role="group"
       aria-roledescription="slide"
       data-slot="carousel-item"
+      data-testid="carousel-item"
       className={cn(
         "w-fit h-fit",
         className
@@ -260,6 +263,7 @@ function CarouselPrevious({
   return (
     <Button
       data-slot="carousel-previous"
+      data-testid="carousel-previous"
       variant={variant}
       size={size}
       className={cn(buttonClasses, className)}
@@ -305,6 +309,7 @@ function CarouselNext({
   return (
     <Button
       data-slot="carousel-next"
+      data-testid="carousel-next"
       variant={variant}
       size={size}
       className={cn(buttonClasses, className)}
@@ -348,12 +353,10 @@ function CarouselProgressIndicator({
   className,
   variant = "default",
   labels,
-  onSelect,
   ...props
 }: Omit<React.ComponentProps<"div">, "onSelect"> & {
   variant?: "default" | "pokeball" | "greatball"
   labels?: string[]
-  onSelect?: (index: number) => void
 }) {
   const { api, orientation } = useCarousel()
   const [selectedIndex, setSelectedIndex] = React.useState(0)
@@ -381,13 +384,8 @@ function CarouselProgressIndicator({
 
   // Handle clicks on progress indicator items
   const handleItemClick = (index: number) => {
-    // If custom onSelect handler is provided, use it
-    if (onSelect) {
-      onSelect(index)
-    } else {
-      // Otherwise, scroll carousel to the clicked index
-      api?.scrollTo(index)
-    }
+    // Otherwise, scroll carousel to the clicked index
+    api?.scrollTo(index)
   }
 
   // Generate the appropriate variant string based on active state
@@ -410,6 +408,7 @@ function CarouselProgressIndicator({
       aria-label="Carousel progress"
       aria-roledescription="carousel progress indicator"
       data-slot="carousel-progress-indicator"
+      data-testid="carousel-progress-indicator"
       {...props}
     >
       {displayLabels.map((label, index) => {

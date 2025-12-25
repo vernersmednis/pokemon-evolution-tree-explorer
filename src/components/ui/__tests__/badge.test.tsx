@@ -10,15 +10,11 @@ describe('Badge component behavior', () => {
   const renderBadge = (options: { asChild?: boolean; children?: ReactNode } = {}) => {
     const { asChild = false, children = 'Water' } = options;
 
-    if (asChild) {
-      return render(
-        <Badge asChild>
-          {children}
-        </Badge>
-      );
-    }
-
-    return render(<Badge>{children}</Badge>);
+    return render(
+      <Badge asChild={asChild}>
+        {children}
+      </Badge>
+    );
   };
   describe('when initialized', () => {
     const defaultOptions = {};

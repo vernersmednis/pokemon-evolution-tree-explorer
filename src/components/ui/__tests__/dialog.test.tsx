@@ -21,30 +21,24 @@ describe('Dialog component behavior', () => {
   });
 
   const renderDialog = (options: {
-    triggerText?: string;
-    bodyText?: string;
     showCloseButton?: boolean;
-    customCloseText?: string;
   } = {}) => {
     const {
-      triggerText = 'Open dialog',
-      bodyText = 'Template content',
       showCloseButton = false,
-      customCloseText = 'Dismiss',
     } = options;
 
     return render(
       <Dialog>
-        <DialogTrigger>{triggerText}</DialogTrigger>
+        <DialogTrigger>Open dialog</DialogTrigger>
         <DialogHeader>
           <DialogTitle>Dex entry</DialogTitle>
           <DialogDescription>Bulbasaur naps in the sun</DialogDescription>
         </DialogHeader>
         <DialogContent showCloseButton={showCloseButton}>
-          <Typography>{bodyText}</Typography>
+          <Typography>Template content</Typography>
           <DialogFooter>
             <DialogClose asChild>
-              <button type="button">{customCloseText}</button>
+              <button type="button">Dismiss</button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

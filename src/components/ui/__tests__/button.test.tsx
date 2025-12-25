@@ -19,11 +19,9 @@ describe('Button component behavior', () => {
   } = {}) => {
     const { asChild = false, children = 'Catch Pokemon', onClick } = options;
 
-    if (asChild) {
-      return render(<Button asChild>{children}</Button>);
-    }
-
-    return render(<Button onClick={onClick}>{children}</Button>);
+    return render(
+      <Button asChild={asChild} onClick={onClick}>{children}</Button>
+    );
   };
 
   describe('when initialized', () => {

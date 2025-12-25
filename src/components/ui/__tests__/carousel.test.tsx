@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom'
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
 	Carousel,
@@ -34,6 +34,9 @@ jest.mock('embla-carousel-react', () => {
     }),
     off: jest.fn((event: string, cb: (api: typeof mockApi) => void) => {
       handlers[event] = (handlers[event] || []).filter((fn) => fn !== cb)
+    }),
+    emit: jest.fn((event: 'init' | 'reInit' | 'select') => {
+      (handlers[event] || []).forEach((cb) => cb(mockApi))
     }),
   }
 
@@ -74,7 +77,7 @@ describe('Carousel suite', () => {
       labels = ['1.', '2.', '3.', '4.'],
       opts
     } = options;
-  
+
     return render(
       <Carousel
         setApi={setCarouselApi}
@@ -99,7 +102,7 @@ describe('Carousel suite', () => {
     let currentOptions = defaultOptions;
 
     beforeEach(() => {
-      renderCarousel(currentOptions); // Defaults to 'primary'
+      renderCarousel(currentOptions)
     });
     
     afterEach(() => {
@@ -137,18 +140,18 @@ describe('Carousel suite', () => {
       beforeAll(() => {
         api = undefined; // Reset for each test
         currentOptions = { setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } };
-      });
+      });    
 
       it('must have been initialized with the initial slide and without scrolling animation', () => {
         expect(api?.scrollTo).toHaveBeenCalledWith(initialIndex, true);
       });
 
-      it('must have called canScrollPrev and canScrollNext', () => {
+      it('must have checked if can scroll to previous slide and if can scroll to next slide', () => {
         expect(api?.canScrollPrev).toHaveBeenCalled();
         expect(api?.canScrollNext).toHaveBeenCalled();
       });
-    });
-    
+    });    
+      
     describe('when reinitialized', () => {
       let api: CarouselApi | undefined;
 
@@ -159,13 +162,14 @@ describe('Carousel suite', () => {
 
       beforeEach(() => {
         jest.clearAllMocks();
+        act(() => { api?.emit('reInit') })
       });
 
       it('must have been initialized with the initial slide and without scrolling animation', () => {
         expect(api?.scrollTo).toHaveBeenCalledWith(initialIndex, true);
       });
 
-      it('must have called canScrollPrev and canScrollNext', () => {
+      it('must have checked if can scroll to previous slide and if can scroll to next slide', () => {
         expect(api?.canScrollPrev).toHaveBeenCalled();
         expect(api?.canScrollNext).toHaveBeenCalled();
       });

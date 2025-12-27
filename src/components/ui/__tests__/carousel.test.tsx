@@ -16,56 +16,72 @@ import {
 jest.mock('embla-carousel-react', () => {
   const ReactLib = React
 
-  const handlers: Record<string, Array<(api: typeof mockApi) => void>> = {}
-
-  const snapList = [0, 1, 2, 3]
-  let selectedIndex = 0
-
-  const clampIndex = (index: number) => {
-    if (index < 0) return 0
-    const last = snapList.length - 1
-    if (index > last) return last
-    return index
+  type MockEmblaApi = {
+    scrollPrev: () => void
+    scrollNext: () => void
+    scrollTo: (index: number, jump?: boolean) => void
+    canScrollPrev: () => boolean
+    canScrollNext: () => boolean
+    scrollSnapList: () => number[]
+    selectedScrollSnap: () => number
+    slideNodes: () => HTMLElement[]
+    on: (event: 'init' | 'reInit' | 'select', cb: (api: MockEmblaApi) => void) => MockEmblaApi
+    off: (event: 'init' | 'reInit' | 'select', cb: (api: MockEmblaApi) => void) => MockEmblaApi
+    emit: (event: 'init' | 'reInit' | 'select') => void
   }
 
-  const emitEvent = (event: 'init' | 'reInit' | 'select') => {
-    ;(handlers[event] || []).forEach((cb) => cb(mockApi))
-  }
+  const createMockApi = (): MockEmblaApi => {
+    const snapList = [0, 1, 2, 3]
+    let selectedIndex = 0
+    const handlers: Partial<Record<'init' | 'reInit' | 'select', Array<(api: MockEmblaApi) => void>>> = {}
 
-  const mockApi = {
-    scrollPrev: jest.fn(() => {
-      selectedIndex = clampIndex(selectedIndex - 1)
-      emitEvent('select')
-    }),
-    scrollNext: jest.fn(() => {
-      selectedIndex = clampIndex(selectedIndex + 1)
-      emitEvent('select')
-    }),
-    scrollTo: jest.fn((index: number) => {
-      selectedIndex = clampIndex(index)
-      emitEvent('select')
-    }),
-    canScrollPrev: jest.fn(() => selectedIndex > 0),
-    canScrollNext: jest.fn(() => selectedIndex < snapList.length - 1),
-    scrollSnapList: jest.fn(() => snapList),
-    selectedScrollSnap: jest.fn(() => selectedIndex),
-    slideNodes: jest.fn(() => []),
-    on: jest.fn((event: 'init' | 'reInit' | 'select', cb: (api: typeof mockApi) => void) => {
-      handlers[event] ||= []
-      handlers[event].push(cb)
-      cb(mockApi)
-    }),
-    off: jest.fn((event: string, cb: (api: typeof mockApi) => void) => {
-      handlers[event] = (handlers[event] || []).filter((fn) => fn !== cb)
-    }),
-    emit: jest.fn((event: 'init' | 'reInit' | 'select') => {
-      emitEvent(event)
-    }),
+    const clampIndex = (index: number) => {
+      if (index < 0) return 0
+      const last = snapList.length - 1
+      if (index > last) return last
+      return index
+    }
+
+    const mockApi: MockEmblaApi = {
+      scrollPrev: jest.fn(() => {
+        selectedIndex = clampIndex(selectedIndex - 1)
+        mockApi.emit('select')
+      }),
+      scrollNext: jest.fn(() => {
+        selectedIndex = clampIndex(selectedIndex + 1)
+        mockApi.emit('select')
+      }),
+      scrollTo: jest.fn((index: number) => {
+        selectedIndex = clampIndex(index)
+        mockApi.emit('select')
+      }),
+      canScrollPrev: jest.fn(() => selectedIndex > 0),
+      canScrollNext: jest.fn(() => selectedIndex < snapList.length - 1),
+      scrollSnapList: jest.fn(() => snapList),
+      selectedScrollSnap: jest.fn(() => selectedIndex),
+      slideNodes: jest.fn(() => []),
+      on: jest.fn((event: 'init' | 'reInit' | 'select', cb: (api: MockEmblaApi) => void) => {
+        handlers[event] ||= []
+        handlers[event].push(cb)
+        cb(mockApi)
+        return mockApi
+      }),
+      off: jest.fn((event: 'init' | 'reInit' | 'select', cb: (api: MockEmblaApi) => void) => {
+        handlers[event] = (handlers[event] || []).filter((fn) => fn !== cb)
+        return mockApi
+      }),
+      emit: jest.fn((event: 'init' | 'reInit' | 'select') => {
+        ;(handlers[event] || []).forEach((cb) => cb(mockApi))
+      }),
+    }
+
+    return mockApi
   }
 
   const useEmblaCarousel = () => {
+    const api = ReactLib.useMemo(() => createMockApi(), [])
     const ref = ReactLib.useCallback(() => {}, [])
-    return [ref, mockApi] as const
+    return [ref, api] as const
   }
 
   return {
@@ -99,29 +115,22 @@ describe('Carousel suite', () => {
     labels?: string[];
     opts?: MockCarouselOptions;
   } = {}) => {
-    const {
-      setCarouselApi = () => {},
-      positioning = 'primary',
-      orientation = 'horizontal',
-      labels = ['1.', '2.', '3.', '4.'],
-      opts
-    } = options;
 
     return render(
       <Carousel
-        setApi={setCarouselApi}
-        orientation={orientation}
-        opts={opts ?? { startIndex: initialIndex }}
+        setApi={options.setCarouselApi}
+        orientation={options.orientation}
+        opts={options.opts ?? { startIndex: initialIndex }}
       >
-        <CarouselPrevious positioning={positioning} />
+        <CarouselPrevious positioning={options.positioning} />
         <CarouselContent>
           <CarouselItem key="item-1">Item 1</CarouselItem>
           <CarouselItem key="item-2">Item 2</CarouselItem>
           <CarouselItem key="item-3">Item 3</CarouselItem>
           <CarouselItem key="item-4">Item 4</CarouselItem>
         </CarouselContent>
-        <CarouselNext positioning={positioning} />
-        <CarouselProgressIndicator labels={labels} />
+        <CarouselNext positioning={options.positioning} />
+        <CarouselProgressIndicator labels={options.labels} />
       </Carousel>
     );
   };
@@ -173,12 +182,15 @@ describe('Carousel suite', () => {
       expect(screen.getByTestId('carousel')).toBeInTheDocument();
     });
     
-    describe('when initialized', () => {
+    describe('when initialized ("init" event)', () => {
       let api: CarouselApi | undefined;
 
       beforeAll(() => {
         api = undefined; // Reset for each test
-        currentOptions = { setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } };
+        currentOptions = { 
+          ...defaultOptions,
+          setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } 
+        };
       });    
 
       it('must have been initialized with the initial slide and without scrolling animation', () => {
@@ -191,12 +203,15 @@ describe('Carousel suite', () => {
       });
     });    
       
-    describe('when reinitialized', () => {
+    describe('when reinitialized ("reInit" event)', () => {
       let api: CarouselApi | undefined;
 
       beforeAll(() => {
         api = undefined; // Reset for each test
-        currentOptions = { setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } };
+        currentOptions = { 
+          ...defaultOptions,
+          setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; }
+        };
       });
 
       beforeEach(() => {
@@ -212,212 +227,21 @@ describe('Carousel suite', () => {
         expect(api?.canScrollPrev).toHaveBeenCalled();
         expect(api?.canScrollNext).toHaveBeenCalled();
       });
+
+      it.todo('must update the carousel slide (item) sizing');
     });
 
-    describe('when "next" button is clicked', () => {
+    
+
+    describe('when selecting a slide ("select" event)', () => {
       let api: CarouselApi | undefined;
 
       beforeAll(() => {
         api = undefined; // Reset for each test
-        currentOptions = { setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } };
-      });
-
-      beforeEach(async () => {
-        jest.clearAllMocks();
-        await user.click(screen.getByTestId('carousel-next'));
-      });
-
-      it('must scroll to the next item', () => {
-        expect(api?.scrollNext).toHaveBeenCalled();
-      });
-    });
-
-    describe('when "previous" button is clicked', () => {
-      let api: CarouselApi | undefined;
-
-      beforeAll(() => {
-        api = undefined; // Reset for each test
-        currentOptions = { 
-          opts: { startIndex: 2 },
+        currentOptions = {
+          ...defaultOptions, 
           setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } 
         };
-      });
-
-      beforeEach(async () => {
-        await user.click(screen.getByTestId('carousel-previous'));
-      });
-
-      it('must scroll to the previous item', () => {
-        expect(api?.scrollPrev).toHaveBeenCalled();
-      });
-    });
-
-    describe('when navigating by keyboard', () => {
-      let api: CarouselApi | undefined;
-
-      beforeAll(() => {
-        api = undefined
-        currentOptions = { setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } };
-      })
-
-      describe('when "ArrowUp" key is pressed', () => {
-        beforeEach(() => {
-          jest.clearAllMocks()
-          fireEvent.keyDown(screen.getByTestId('carousel'), { key: 'ArrowUp' })
-        })
-
-        it('must scroll to the previous item', () => {
-          expect(api?.scrollPrev).toHaveBeenCalled()
-        })
-      })
-
-      describe('when "ArrowLeft" key is pressed', () => {
-        beforeEach(() => {
-          jest.clearAllMocks()
-          fireEvent.keyDown(screen.getByTestId('carousel'), { key: 'ArrowLeft' })
-        })
-
-        it('must scroll to the previous item', () => {
-          expect(api?.scrollPrev).toHaveBeenCalled()
-        })
-      })
-
-      describe('when "ArrowDown" key is pressed', () => {
-        beforeEach(() => {
-          jest.clearAllMocks()
-          fireEvent.keyDown(screen.getByTestId('carousel'), { key: 'ArrowDown' })
-        })
-
-        it('must scroll to the next item', () => {
-          expect(api?.scrollNext).toHaveBeenCalled()
-        })
-      })
-      
-      describe('when "ArrowRight" key is pressed', () => {
-        beforeEach(() => {
-          jest.clearAllMocks()
-          fireEvent.keyDown(screen.getByTestId('carousel'), { key: 'ArrowRight' })
-        })
-
-        it('must scroll to the next item', () => {
-          expect(api?.scrollNext).toHaveBeenCalled()
-        })
-      })
-    })
-    
-    describe('when progress indicator buttons are clicked', () => {
-      let api: CarouselApi | undefined;
-
-      beforeAll(() => {
-        api = undefined; // Reset for each test
-        currentOptions = { setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } };
-      });
-      
-      describe('when button "3." is clicked', () => {
-        beforeEach(async () => {
-          await user.click(screen.getByText('3.'));
-        });
-
-        it('must scroll to item 3', () => {
-          expect(api?.scrollTo).toHaveBeenCalledWith(2);
-        });
-      });
-    });
-
-    describe('when passing prop "orientation" and passing prop "positioning"', () => {
-      describe('when passing as "horizontal" (default) and "primary" (default)', () => {
-        beforeAll(() => {
-          currentOptions = { orientation: 'horizontal', positioning: 'primary' };
-        });
-
-        it('must render with horizontal orientation and "previous" and "next" buttons in primary positioning', () => {
-          expect(screen.getByTestId('carousel')).toHaveClass('grid-cols-[min-content_auto] grid-rows-[auto_min-content_auto]');
-          expect(screen.getByTestId('carousel-previous')).toHaveClass('[&>span]:sr-only absolute size-8 rounded-full top-1/2 -left-12 -translate-y-1/2');
-          expect(screen.getByTestId('carousel-next')).toHaveClass('[&>span]:sr-only absolute size-8 rounded-full top-1/2 -right-12 -translate-y-1/2');
-        });
-      });
-      describe('when passing as "vertical" and "primary" (default)', () => {
-        beforeAll(() => {
-          currentOptions = { orientation: 'vertical', positioning: 'primary' };
-        });
-
-        it('must render with vertical orientation and "previous" and "next" buttons in primary positioning', () => {
-          expect(screen.getByTestId('carousel')).toHaveClass('grid-cols-[min-content_auto] grid-rows-[min-content_auto_auto]');
-          expect(screen.getByTestId('carousel-previous')).toHaveClass('[&>span]:sr-only absolute size-8 rounded-full -top-12 left-1/2 -translate-x-1/2 rotate-90');
-          expect(screen.getByTestId('carousel-next')).toHaveClass('[&>span]:sr-only absolute size-8 rounded-full -bottom-12 left-1/2 -translate-x-1/2 rotate-90');
-        });
-      });
-
-      describe('when passing as "horizontal" (default) and "secondary"', () => {
-        beforeAll(() => {
-          currentOptions = { orientation: 'horizontal', positioning: 'secondary' };
-        });
-
-        it('must render with horizontal orientation and "previous" and "next" buttons in secondary positioning', () => {
-          expect(screen.getByTestId('carousel')).toHaveClass('grid-cols-[min-content_auto] grid-rows-[auto_min-content_auto]');
-          expect(screen.getByTestId('carousel-previous')).toHaveClass('w-fit col-start-1 row-start-2 justify-self-start');
-          expect(screen.getByTestId('carousel-next')).toHaveClass('w-fit col-start-2 row-start-2 justify-self-end');
-        });
-      });
-
-      describe('when passing as "vertical" and "secondary"', () => {
-        beforeAll(() => {
-          currentOptions = { orientation: 'vertical', positioning: 'secondary' };
-        });
-
-        it('must render with vertical orientation and "previous" and "next" buttons in secondary positioning', () => {
-          expect(screen.getByTestId('carousel')).toHaveClass('grid-cols-[min-content_auto] grid-rows-[min-content_auto_auto]');
-          expect(screen.getByTestId('carousel-previous')).toHaveClass('w-fit col-start-1 row-start-1 justify-self-center');
-          expect(screen.getByTestId('carousel-next')).toHaveClass('w-fit col-start-1 row-start-3 justify-self-center');
-        });
-      });
-    });
-
-    describe('when pass prop "labels" [\'A.\', \'B.\', \'C.\', \'D.\'] for carousel progress indicator', () => {
-
-      beforeAll(() => {
-        currentOptions = { labels: ['A.', 'B.', 'C.', 'D.'] };
-      });
-
-      it('must render the custom labels', () => {
-        expect(screen.getByText('A.')).toBeInTheDocument();
-        expect(screen.getByText('B.')).toBeInTheDocument();
-        expect(screen.getByText('C.')).toBeInTheDocument();
-        expect(screen.getByText('D.')).toBeInTheDocument();
-      });
-    });
-
-    describe('when pass prop "opts" for carousel root component', () => {
-      let api: CarouselApi | undefined;
-
-      describe('with startIndex: 2', () => {
-        beforeAll(() => {
-          api = undefined; // Reset for each test
-          currentOptions = {
-            opts: { startIndex: 2 },
-            setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; }
-          };
-        });
-
-        it('must have been initialized with the initial slide item 3 and without scrolling animation', () => {
-          expect(api?.scrollTo).toHaveBeenCalledWith(2, true);
-        });
-      });
-    });
-
-    describe('when pass prop "plugins" for carousel root component', () => {
-      
-      describe('with plugin "Auto Height" ', () => {
-        it.todo('must initialize embla with the "Auto Height" plugin')
-      });
-    });
-
-    describe('when selecting a slide', () => {
-      let api: CarouselApi | undefined;
-
-      beforeAll(() => {
-        api = undefined; // Reset for each test
-        currentOptions = { setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } };
       });
 
       beforeEach(() => {
@@ -446,6 +270,250 @@ describe('Carousel suite', () => {
             expect(button).not.toBeDisabled();
             expect(button).not.toHaveAttribute('aria-current');
           }
+        });
+      });
+      
+      it.todo('must update the carousel slide (item) sizing');
+    });
+
+    describe('when clicking "next" button', () => {
+      let api: CarouselApi | undefined;
+
+      beforeAll(() => {
+        api = undefined; // Reset for each test
+        currentOptions = { 
+          ...defaultOptions,
+          setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } 
+        };
+      });
+
+      beforeEach(async () => {
+        jest.clearAllMocks();
+        await user.click(screen.getByTestId('carousel-next'));
+      });
+
+      it('must scroll to the next item', () => {
+        expect(api?.scrollNext).toHaveBeenCalled();
+      });
+    });
+
+    describe('when clicking "previous" button', () => {
+      let api: CarouselApi | undefined;
+
+      beforeAll(() => {
+        api = undefined; // Reset for each test
+        currentOptions = { 
+          ...defaultOptions,
+          opts: { startIndex: 2 },
+          setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } 
+        };
+      });
+
+      beforeEach(async () => {
+        await user.click(screen.getByTestId('carousel-previous'));
+      });
+
+      it('must scroll to the previous item', () => {
+        expect(api?.scrollPrev).toHaveBeenCalled();
+      });
+    });
+
+    describe('when pressing "ArrowUp" key', () => {
+      let api: CarouselApi | undefined;
+
+      beforeAll(() => {
+        api = undefined
+        currentOptions = { 
+          ...defaultOptions,
+          setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; }
+        };
+      })
+      
+      beforeEach(() => {
+        jest.clearAllMocks()
+        fireEvent.keyDown(screen.getByTestId('carousel'), { key: 'ArrowUp' })
+      })
+
+      it('must scroll to the previous item', () => {
+        expect(api?.scrollPrev).toHaveBeenCalled()
+      })
+    })
+
+    describe('when pressing "ArrowLeft" key', () => {
+      let api: CarouselApi | undefined;
+
+      beforeAll(() => {
+        api = undefined
+        currentOptions = { 
+          ...defaultOptions,
+          setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } 
+        };
+      })
+      
+      beforeEach(() => {
+        jest.clearAllMocks()
+        fireEvent.keyDown(screen.getByTestId('carousel'), { key: 'ArrowLeft' })
+      })
+
+      it('must scroll to the previous item', () => {
+        expect(api?.scrollPrev).toHaveBeenCalled()
+      })
+    })
+
+    describe('when pressing "ArrowDown" key', () => {
+      let api: CarouselApi | undefined;
+
+      beforeAll(() => {
+        api = undefined
+        currentOptions = { 
+          ...defaultOptions,
+          setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } 
+        };
+      })
+      
+      beforeEach(() => {
+        jest.clearAllMocks()
+        fireEvent.keyDown(screen.getByTestId('carousel'), { key: 'ArrowDown' })
+      })
+
+      it('must scroll to the next item', () => {
+        expect(api?.scrollNext).toHaveBeenCalled()
+      })
+    })
+    
+    describe('when pressing "ArrowRight" key', () => {
+      let api: CarouselApi | undefined;
+
+      beforeAll(() => {
+        api = undefined
+        currentOptions = { 
+          ...defaultOptions,
+          setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; }
+        };
+      })
+      
+      beforeEach(() => {
+        jest.clearAllMocks()
+        fireEvent.keyDown(screen.getByTestId('carousel'), { key: 'ArrowRight' })
+      })
+
+      it('must scroll to the next item', () => {
+        expect(api?.scrollNext).toHaveBeenCalled()
+      })
+    })
+    
+    describe('when clicking progress indicator buttons', () => {
+      let api: CarouselApi | undefined;
+
+      beforeAll(() => {
+        api = undefined; // Reset for each test
+        currentOptions = { 
+          ...defaultOptions,
+          setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; } 
+        };
+      });
+      
+      describe('when clicking button "3."', () => {
+        beforeEach(async () => {
+          await user.click(screen.getByText('3.'));
+        });
+
+        it('must scroll to item 3', () => {
+          expect(api?.scrollTo).toHaveBeenCalledWith(2);
+        });
+      });
+    });
+
+    describe('when passing prop "orientation" and passing prop "positioning"', () => {
+      describe('when passing as "horizontal" (default) and "primary" (default)', () => {
+        beforeAll(() => {
+          currentOptions = { ...defaultOptions, orientation: 'horizontal', positioning: 'primary' };
+        });
+
+        it('must render with horizontal orientation and "previous" and "next" buttons in primary positioning', () => {
+          //expect(screen.getByTestId('carousel')).toHaveClass('grid-cols-[min-content_auto] grid-rows-[auto_min-content_auto]');
+          expect(screen.getByTestId('carousel-previous')).toHaveClass('[&>span]:sr-only absolute size-8 rounded-full top-1/2 -left-12 -translate-y-1/2');
+          expect(screen.getByTestId('carousel-next')).toHaveClass('[&>span]:sr-only absolute size-8 rounded-full top-1/2 -right-12 -translate-y-1/2');
+        });
+
+        it.todo('must render with correct grid structure');
+      });
+      describe('when passing as "vertical" and "primary" (default)', () => {
+        beforeAll(() => {
+          currentOptions = { ...defaultOptions, orientation: 'vertical', positioning: 'primary' };
+        });
+
+        it('must render with vertical orientation and "previous" and "next" buttons in primary positioning', () => {
+          //expect(screen.getByTestId('carousel')).toHaveClass('grid-cols-[min-content_auto] grid-rows-[min-content_auto_auto]');
+          expect(screen.getByTestId('carousel-previous')).toHaveClass('[&>span]:sr-only absolute size-8 rounded-full -top-12 left-1/2 -translate-x-1/2 rotate-90');
+          expect(screen.getByTestId('carousel-next')).toHaveClass('[&>span]:sr-only absolute size-8 rounded-full -bottom-12 left-1/2 -translate-x-1/2 rotate-90');
+        });
+
+        it.todo('must render with correct grid structure');
+      });
+
+      describe('when passing as "horizontal" (default) and "secondary"', () => {
+        beforeAll(() => {
+          currentOptions = { ...defaultOptions, orientation: 'horizontal', positioning: 'secondary' };
+        });
+
+        it('must render with horizontal orientation and "previous" and "next" buttons in secondary positioning', () => {
+          //expect(screen.getByTestId('carousel')).toHaveClass('grid-cols-[min-content_auto] grid-rows-[auto_min-content_auto]');
+          expect(screen.getByTestId('carousel-previous')).toHaveClass('w-fit col-start-1 row-start-2 justify-self-start');
+          expect(screen.getByTestId('carousel-next')).toHaveClass('w-fit col-start-2 row-start-2 justify-self-end');
+        });
+        
+        it.todo('must render with correct grid structure');
+      });
+
+      describe('when passing as "vertical" and "secondary"', () => {
+        beforeAll(() => {
+          currentOptions = { ...defaultOptions, orientation: 'vertical', positioning: 'secondary' };
+        });
+
+        it('must render with vertical orientation and "previous" and "next" buttons in secondary positioning', () => {
+          //expect(screen.getByTestId('carousel')).toHaveClass('grid-cols-[min-content_auto] grid-rows-[min-content_auto_auto]');
+          expect(screen.getByTestId('carousel-previous')).toHaveClass('w-fit col-start-1 row-start-1 justify-self-center');
+          expect(screen.getByTestId('carousel-next')).toHaveClass('w-fit col-start-1 row-start-3 justify-self-center');
+        });
+        
+        it.todo('must render with correct grid structure');
+      });
+    });
+
+    describe('when passing prop "labels" for carousel progress indicator', () => {
+      describe('when passing as [\'A.\', \'B.\', \'C.\', \'D.\']', () => {
+        beforeAll(() => {
+          currentOptions = { 
+            ...defaultOptions, 
+            labels: ['A.', 'B.', 'C.', 'D.']
+            };
+        });
+
+        it('must render the custom labels', () => {
+          expect(screen.getByText('A.')).toBeInTheDocument();
+          expect(screen.getByText('B.')).toBeInTheDocument();
+          expect(screen.getByText('C.')).toBeInTheDocument();
+          expect(screen.getByText('D.')).toBeInTheDocument();
+        });
+      });   
+    });
+
+    describe('when passing prop "opts" for carousel root component', () => {
+      let api: CarouselApi | undefined;
+
+      describe('with startIndex: 2', () => {
+        beforeAll(() => {
+          api = undefined; // Reset for each test
+          currentOptions = {
+             ...defaultOptions, 
+            opts: { startIndex: 2 },
+            setCarouselApi: (capturedApi: CarouselApi) => { api = capturedApi; }
+          };
+        });
+
+        it('must have been initialized with the initial slide item 3 and without scrolling animation', () => {
+          expect(api?.scrollTo).toHaveBeenCalledWith(2, true);
         });
       });
     });

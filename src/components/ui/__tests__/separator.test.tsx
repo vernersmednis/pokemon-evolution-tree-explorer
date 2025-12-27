@@ -16,7 +16,10 @@ describe('Separator component behavior', () => {
   };
 
   describe('when initialized', () => {
-    const defaultOptions = {};
+    const defaultOptions: {
+      orientation?: "horizontal" | "vertical";
+      decorative?: boolean;
+    } = {};
     let currentOptions = defaultOptions;
 
     beforeEach(() => {

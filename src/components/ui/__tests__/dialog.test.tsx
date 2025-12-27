@@ -45,7 +45,7 @@ describe('Dialog component behavior', () => {
   };
 
   describe('when initialized with full composition', () => {
-    const defaultOptions = {};
+    const defaultOptions: { showCloseButton?: boolean } = {}
     let currentOptions = defaultOptions;
 
     beforeEach(() => {

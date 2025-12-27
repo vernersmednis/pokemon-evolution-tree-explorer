@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import { cleanup, render, screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
-import { Button } from '../button';
 import userEvent from '@testing-library/user-event';
+import { Button } from '../button';
+import type { ReactNode } from 'react';
 
 describe('Button component behavior', () => {
   let user: ReturnType<typeof userEvent.setup>
@@ -14,18 +14,23 @@ describe('Button component behavior', () => {
   // Helper to render `Button` in tests. 
   const renderButton = (options: {
     asChild?: boolean;
-    children?: ReactNode;
+    children?: ReactNode,
     onClick?: () => void;
   } = {}) => {
-    const { asChild = false, children = 'Catch Pokemon', onClick } = options;
 
     return render(
-      <Button asChild={asChild} onClick={onClick}>{children}</Button>
+      <Button asChild={options.asChild} onClick={options.onClick}>
+        {options.children}
+      </Button>
     );
   };
 
   describe('when initialized', () => {
-    const defaultOptions = {};
+    const defaultOptions: {
+      asChild?: boolean;
+      children?: ReactNode,
+      onClick?: () => void;
+    } = { children: 'Catch Pokemon' };
     let currentOptions = defaultOptions;
 
     beforeEach(() => {
@@ -45,11 +50,47 @@ describe('Button component behavior', () => {
       expect(screen.getByText('Catch Pokemon')).toBeInTheDocument();
     });
 
+    describe('when passing prop "asChild"', () => {
+      describe('when passing as "false" (default)', () => {
+        beforeAll(() => {
+          currentOptions = { 
+            ...defaultOptions,
+            asChild: false 
+          };
+        });
+
+        it('must render the button element as a button', () => {
+          const button = screen.getByTestId('button');
+          expect(button).toBeInTheDocument();
+          expect(button.tagName).toBe('BUTTON');
+        });
+      });
+
+      describe('when passing as "true"', () => {
+        beforeAll(() => {
+          currentOptions = {
+            asChild: true,
+            children: <a href="/pokedex">Open Pokedex</a>,
+          };
+        });
+
+        describe('when rendering as an anchor element', () => {
+          it('must render the button element as an anchor', () => {
+            const button = screen.getByTestId('button');
+            expect(button).toBeInTheDocument();
+            expect(button).toHaveAttribute('href', '/pokedex');
+          });
+        });
+      });
+    });
+
     describe('when passing prop "onClick"', () => {
       const handleClick = jest.fn();
 
       beforeAll(() => {
-        currentOptions = { onClick: handleClick };
+        currentOptions = { 
+          ...defaultOptions,
+          onClick: handleClick };
       });
 
       describe('when clicking the button', () => {
@@ -59,23 +100,6 @@ describe('Button component behavior', () => {
 
         it('must trigger the onClick event', () => {
           expect(handleClick).toHaveBeenCalled();
-        });
-      });
-    });
-
-    describe('when passing prop "asChild"', () => {
-      describe('when passing child as a link (anchor)', () => {
-        beforeAll(() => {
-          currentOptions = { 
-            asChild: true, 
-            children: <a href="/pokedex">Open Pokedex</a> 
-          };
-        });
-
-        it('must render the button element as an anchor', () => {
-          const button = screen.getByTestId('button');
-          expect(button).toBeInTheDocument();
-          expect(button).toHaveAttribute('href', '/pokedex');
         });
       });
     });

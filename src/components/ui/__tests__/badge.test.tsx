@@ -8,16 +8,19 @@ describe('Badge component behavior', () => {
 
   // Helper to render `Badge` in tests. 
   const renderBadge = (options: { asChild?: boolean; children?: ReactNode } = {}) => {
-    const { asChild = undefined, children = 'Water' } = options;
 
     return render(
-      <Badge asChild={asChild}>
-        {children}
+      <Badge asChild={options.asChild}>
+        {options.children}
       </Badge>
     );
   };
+  
   describe('when initialized', () => {
-    const defaultOptions = {};
+    const defaultOptions: { 
+      asChild?: boolean; 
+      children?: ReactNode 
+    } = { children: 'Water' };
     let currentOptions = defaultOptions;
 
     beforeEach(() => {
@@ -38,17 +41,36 @@ describe('Badge component behavior', () => {
     });
     
     describe('when passing prop "asChild"', () => {
-      beforeAll(() => {
-        currentOptions = { 
-          asChild: true, 
-          children: (<a href="/types/water">Water Type</a>)
-        };
-      });
+      describe('when passing as "false" (default)', () => {
+        beforeAll(() => {
+          currentOptions = { 
+            ...defaultOptions,
+            asChild: false,
+          };
+        });
 
-      it('must render the badge element as an anchor', () => {
-        const badge = screen.getByTestId('badge');
-        expect(badge).toBeInTheDocument();
-        expect(badge).toHaveAttribute('href', '/types/water');
+        it('must render the badge element as a span', () => {
+          const badge = screen.getByTestId('badge');
+          expect(badge).toBeInTheDocument();
+          expect(badge.tagName).toBe('SPAN');
+        });
+      });
+      
+      describe('when passing as "true" (default)', () => {
+        beforeAll(() => {
+          currentOptions = { 
+            asChild: true,
+            children: (<a href="/types/water">Water Type</a>)
+          };
+        });
+
+        describe('when rendering as an anchor element', () => {
+          it('must render the badge element as an anchor', () => {
+            const badge = screen.getByTestId('badge');
+            expect(badge).toBeInTheDocument();
+            expect(badge).toHaveAttribute('href', '/types/water');
+          });
+        });
       });
     });
   });

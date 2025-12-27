@@ -127,7 +127,17 @@ describe('Carousel suite', () => {
   };
 
   describe('when initialized with full composition', () => {
-    const defaultOptions = {};
+    const defaultOptions: {
+      setCarouselApi?: (api: CarouselApi) => void;
+      positioning?: 'primary' | 'secondary';
+      orientation?: 'horizontal' | 'vertical';
+      labels?: string[];
+      opts?: MockCarouselOptions;
+    } = {
+      positioning: 'primary',
+      orientation: 'horizontal',
+      labels: ['1.', '2.', '3.', '4.'],
+    };
     let currentOptions = defaultOptions;
 
     beforeEach(() => {

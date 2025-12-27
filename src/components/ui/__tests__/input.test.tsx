@@ -21,8 +21,8 @@ describe('Input component behavior', () => {
   };
 
   describe('when initialized', () => {
-    const defaultOptions = {};
-    let currentOptions = defaultOptions;
+    const defaultOptions: { type?: string } = {}
+    let currentOptions = defaultOptions
 
     beforeEach(() => {
       renderInput(currentOptions);

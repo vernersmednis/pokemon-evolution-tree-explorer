@@ -11,7 +11,7 @@ describe('Button component behavior', () => {
     user = userEvent.setup()
   })
 
-  // Helper to render `Button` in tests. Similar pattern to `renderBadge` in badge tests.
+  // Helper to render `Button` in tests. 
   const renderButton = (options: {
     asChild?: boolean;
     children?: ReactNode;
@@ -45,7 +45,7 @@ describe('Button component behavior', () => {
       expect(screen.getByText('Catch Pokemon')).toBeInTheDocument();
     });
 
-    describe('when pass prop onClick', () => {
+    describe('when passing prop "onClick"', () => {
       const handleClick = jest.fn();
 
       beforeAll(() => {
@@ -63,8 +63,8 @@ describe('Button component behavior', () => {
       });
     });
 
-    describe('when pass prop asChild', () => {
-      describe('when pass child as a link (anchor)', () => {
+    describe('when passing prop "asChild"', () => {
+      describe('when passing child as a link (anchor)', () => {
         beforeAll(() => {
           currentOptions = { 
             asChild: true, 

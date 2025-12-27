@@ -4,10 +4,10 @@ import { Separator } from '../separator';
 
 describe('Separator component behavior', () => {
 
-  // Helper to render `Button` in tests. Similar pattern to `renderBadge` in badge tests.
+  // Helper to render `Button` in tests.
   const renderSeparator = (options: {
-    orientation?: "horizontal" | "vertical" | undefined;
-    decorative?: boolean | undefined;
+    orientation?: "horizontal" | "vertical";
+    decorative?: boolean;
   } = {}) => {
 
     return render(
@@ -28,31 +28,51 @@ describe('Separator component behavior', () => {
       jest.clearAllMocks()
     });
 
-    it('must render a horizontal separator element with no role as separator', () => {
+    it('must render the separator element', () => {
       expect(screen.getByTestId('separator')).toBeInTheDocument();
-      expect(screen.getByTestId('separator')).toHaveAttribute('data-orientation', 'horizontal');
-      expect(screen.getByTestId('separator')).not.toHaveAttribute('role', 'separator');
     });
 
-    describe('when pass prop orientation as vertical', () => {
-      beforeAll(() => {
-        currentOptions = { orientation: 'vertical' };
+    describe('when passing prop "orientation"', () => {
+      describe('when passing as "horizontal" (default)', () => {
+        beforeAll(() => {
+          currentOptions = { orientation: 'horizontal' };
+        });
+
+        it('must render with horizontal orientation', () => {
+          expect(screen.getByTestId('separator')).toHaveAttribute('data-orientation', 'horizontal');
+        });
       });
 
-      it('must render a vertical separator element', () => {
-        expect(screen.getByTestId('separator')).toBeInTheDocument();
-        expect(screen.getByTestId('separator')).toHaveAttribute('data-orientation', 'vertical');
+      describe('when passing as "vertical"', () => {
+        beforeAll(() => {
+          currentOptions = { orientation: 'vertical' };
+        });
+
+        it('must render with vertical orientation', () => {
+          expect(screen.getByTestId('separator')).toHaveAttribute('data-orientation', 'vertical');
+        });
       });
     });
 
-    describe('when pass prop decorative as false', () => {
-      beforeAll(() => {
-        currentOptions = { decorative: false };
+    describe('when passing prop "decorative"', () => {
+      describe('when passing as "true" (default)', () => {
+        beforeAll(() => {
+          currentOptions = { decorative: true };
+        });
+
+        it('must render a separator element with role as separator', () => {
+          expect(screen.getByTestId('separator')).not.toHaveAttribute('role', 'separator');
+        });
       });
 
-      it('must render a separator element with role as separator', () => {
-        expect(screen.getByTestId('separator')).toBeInTheDocument();
-        expect(screen.getByTestId('separator')).toHaveAttribute('role', 'separator');
+      describe('when passing as "false"', () => {
+        beforeAll(() => {
+          currentOptions = { decorative: false };
+        });
+
+        it('must render a separator element with no role as separator', () => {
+          expect(screen.getByTestId('separator')).toHaveAttribute('role', 'separator');
+        });
       });
     });
   });

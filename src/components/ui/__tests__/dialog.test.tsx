@@ -20,12 +20,10 @@ describe('Dialog component behavior', () => {
     user = userEvent.setup();
   });
 
+  // Helper to render `Dialog` with a full composition.
   const renderDialog = (options: {
     showCloseButton?: boolean;
   } = {}) => {
-    const {
-      showCloseButton = false,
-    } = options;
 
     return render(
       <Dialog>
@@ -34,7 +32,7 @@ describe('Dialog component behavior', () => {
           <DialogTitle>Dex entry</DialogTitle>
           <DialogDescription>Bulbasaur naps in the sun</DialogDescription>
         </DialogHeader>
-        <DialogContent showCloseButton={showCloseButton}>
+        <DialogContent showCloseButton={options.showCloseButton}>
           <Typography>Template content</Typography>
           <DialogFooter>
             <DialogClose asChild>
@@ -91,7 +89,7 @@ describe('Dialog component behavior', () => {
       expect(screen.getByText('Bulbasaur naps in the sun')).toBeInTheDocument();
     });
 
-    describe('when dialog is being opened (dialog trigger being clicked on)', () => {
+    describe('when opening the dialog (when clicking on the dialog trigger)', () => {
       beforeEach(async () => {
         await user.click(screen.getByTestId('dialog-trigger'));
       });
@@ -117,36 +115,46 @@ describe('Dialog component behavior', () => {
           await user.click(screen.getByRole('button', { name: 'Dismiss' }));
         });
 
-        it('must close the dialog', async () => {
+        it('must close the dialog', () => {
           expect(screen.queryByTestId('dialog-content')).not.toBeInTheDocument();
         });
       });
-    });
-
-    describe('when pass prop showCloseButton as true', () => {
-      beforeAll(() => {
-        currentOptions = {
-          showCloseButton: true,
-        };
-      });
       
-      describe('when dialog is being opened (dialog trigger being clicked on)', () => {
-        beforeEach(async () => {
-          await user.click(screen.getByTestId('dialog-trigger'));
-        });
+      describe('when passing prop "showCloseButton"', () => {
 
-        it('must render both close buttons (default + custom)', async () => {
-          await screen.findByTestId('dialog-content');
-          expect(screen.getAllByTestId('dialog-close')).toHaveLength(2);
-        });
-        
-        describe('when clicking the default close button', () => {
-          beforeEach(async () => {
-            await user.click(screen.getAllByTestId('dialog-close')[1]);
+        describe('when passing as "false" (default)', () => {
+          beforeAll(() => {
+            currentOptions = {
+              showCloseButton: false,
+            };
           });
 
-          it('must close the dialog', async () => {
-            expect(screen.queryByTestId('dialog-content')).not.toBeInTheDocument();
+          it('must render only one close button (custom)', () => {
+            screen.findByTestId('dialog-content');
+            expect(screen.getAllByTestId('dialog-close')).toHaveLength(1);
+          });
+        })
+
+        describe('when passing as "true"', () => {
+          beforeAll(() => {
+            currentOptions = {
+              showCloseButton: true,
+            };
+          });
+
+          it('must render both close buttons (default + custom)', async () => {
+            await screen.findByTestId('dialog-content');
+            expect(screen.getAllByTestId('dialog-close')).toHaveLength(2);
+          });
+
+          describe('when clicking the default close button', () => {
+            beforeEach(async () => {
+              await user.click(screen.getAllByTestId('dialog-close')[1]);
+            });
+
+            it('must close the dialog', () => {
+              expect(screen.queryByTestId('dialog-content')).not.toBeInTheDocument();
+            });
           });
         });
       });

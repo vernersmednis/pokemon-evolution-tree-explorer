@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import {
   Card,
   CardHeader,
@@ -13,27 +13,36 @@ import { Typography } from '../typography';
 
 describe('Card component behavior', () => {
 
-  describe('initialized with full composition', () => {
+  // Helper to render `Card` with a full composition.
+  const renderCard = () => {
+    return render(
+      <Card>
+        <CardHeader>
+          <CardTitle>Team spotlight</CardTitle>
+          <CardDescription>Rare catch summary</CardDescription>
+          <CardAction>
+            <button type='button'>Edit team</button>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <Typography>Charizard · Pikachu · Blastoise</Typography>
+        </CardContent>
+        <CardFooter>
+          <Typography as="span" variant="caption">Updated just now</Typography>
+        </CardFooter>
+      </Card>
+    );
+  };
 
+  describe('when initialized', () => {
     beforeEach(() => {
-      render(
-        <Card>
-          <CardHeader>
-            <CardTitle>Team spotlight</CardTitle>
-            <CardDescription>Rare catch summary</CardDescription>
-            <CardAction>
-              <button type='button'>Edit team</button>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <Typography>Charizard · Pikachu · Blastoise</Typography>
-          </CardContent>
-          <CardFooter>
-            <Typography as="span" variant="caption">Updated just now</Typography>
-          </CardFooter>
-        </Card>
-      );
+      renderCard();
     });
+
+    afterEach(() => {
+      cleanup()
+      jest.clearAllMocks()
+    })
 
     it('must render card root component', () => {
       expect(screen.getByTestId('card')).toBeInTheDocument();

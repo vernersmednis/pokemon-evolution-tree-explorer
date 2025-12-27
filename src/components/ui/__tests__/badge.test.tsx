@@ -6,7 +6,7 @@ import { Badge } from '../badge';
 
 describe('Badge component behavior', () => {
 
-  // Helper to render `Badge` in tests. Similar pattern to `renderCarousel` in carousel tests.
+  // Helper to render `Badge` in tests. 
   const renderBadge = (options: { asChild?: boolean; children?: ReactNode } = {}) => {
     const { asChild = false, children = 'Water' } = options;
 
@@ -37,7 +37,7 @@ describe('Badge component behavior', () => {
       expect(screen.getByText('Water')).toBeInTheDocument();
     });
     
-    describe('when pass prop asChild', () => {
+    describe('when passing prop "asChild"', () => {
       beforeAll(() => {
         currentOptions = { 
           asChild: true, 

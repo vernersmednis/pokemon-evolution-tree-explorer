@@ -439,19 +439,5 @@ describe('Carousel suite', () => {
         });
       });
     });
-
-    /*
-    api.on("init", handleReInit)
-    api.on("select", onSelect)
-    udateSize() // I don't know how to implement this test
-    api.on("select", updateSize) // I don't know how to implement this test
-
-    // canScrollPrev and canScrollNext should be set on prev and next button clicking
-    // on clicking progress indicator buttons should select appropriate slide 
-    //  and highlight/unhighlight appropriate progress indicator button 
-    
-    api.on("select", handleSelect)
-    
-    */
   });
 });

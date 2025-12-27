@@ -8,7 +8,7 @@ describe('Badge component behavior', () => {
 
   // Helper to render `Badge` in tests. 
   const renderBadge = (options: { asChild?: boolean; children?: ReactNode } = {}) => {
-    const { asChild = false, children = 'Water' } = options;
+    const { asChild = undefined, children = 'Water' } = options;
 
     return render(
       <Badge asChild={asChild}>

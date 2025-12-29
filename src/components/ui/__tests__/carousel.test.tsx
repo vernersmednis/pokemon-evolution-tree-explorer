@@ -30,11 +30,7 @@ jest.mock('embla-carousel-react', () => {
     emit: (event: 'init' | 'reInit' | 'select') => void
   }
 
-  const createMockApi = (): MockEmblaApi => {
-    const snapList = [0, 1, 2, 3]
-    let selectedIndex = 0
-    const handlers: Partial<Record<'init' | 'reInit' | 'select', Array<(api: MockEmblaApi) => void>>> = {}
-
+  const createMockApi = (startIndex: number = 0): MockEmblaApi => {
     const clampIndex = (index: number) => {
       if (index < 0) return 0
       const last = snapList.length - 1
@@ -42,6 +38,9 @@ jest.mock('embla-carousel-react', () => {
       return index
     }
 
+    const snapList = [0, 1, 2, 3]
+    let selectedIndex = clampIndex(startIndex)
+    const handlers: Partial<Record<'init' | 'reInit' | 'select', Array<(api: MockEmblaApi) => void>>> = {}
     const mockApi: MockEmblaApi = {
       scrollPrev: jest.fn(() => {
         selectedIndex = clampIndex(selectedIndex - 1)
@@ -63,7 +62,9 @@ jest.mock('embla-carousel-react', () => {
       on: jest.fn((event: 'init' | 'reInit' | 'select', cb: (api: MockEmblaApi) => void) => {
         handlers[event] ||= []
         handlers[event].push(cb)
-        cb(mockApi)
+        // In the real Embla API, subscribing does not generally trigger the event.
+        // We invoke the callback immediately only for `init` to match the component's expectation that it receives an initial lifecycle signal.
+        if (event === 'init') cb(mockApi)
         return mockApi
       }),
       off: jest.fn((event: 'init' | 'reInit' | 'select', cb: (api: MockEmblaApi) => void) => {
@@ -78,8 +79,9 @@ jest.mock('embla-carousel-react', () => {
     return mockApi
   }
 
-  const useEmblaCarousel = () => {
-    const api = ReactLib.useMemo(() => createMockApi(), [])
+  const useEmblaCarousel = (options?: { startIndex?: number }) => {
+    const startIndex = options?.startIndex ?? 0
+    const api = ReactLib.useMemo(() => createMockApi(startIndex), [startIndex])
     const ref = ReactLib.useCallback(() => {}, [])
     return [ref, api] as const
   }
@@ -310,6 +312,7 @@ describe('Carousel suite', () => {
       });
 
       beforeEach(async () => {
+        jest.clearAllMocks();
         await user.click(screen.getByTestId('carousel-previous'));
       });
 

@@ -1,82 +1,44 @@
 import '@testing-library/jest-dom';
-import { render, cleanup, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Separator } from '../separator';
 
-describe('Separator component behavior', () => {
+describe('Separator', () => {
+  it('renders a separator element', () => {
+    render(<Separator />);
+    expect(screen.getByTestId('separator')).toBeInTheDocument();
+  });
 
-  // Helper to render `Button` in tests.
-  const renderSeparator = (options: {
-    orientation?: "horizontal" | "vertical";
-    decorative?: boolean;
-  } = {}) => {
-
-    return render(
-      <Separator orientation={options.orientation} decorative={options.decorative}/>
-    );
-  };
-
-  describe('when initialized', () => {
-    const defaultOptions: {
-      orientation?: "horizontal" | "vertical";
-      decorative?: boolean;
-    } = {};
-    let currentOptions = defaultOptions;
-
-    beforeEach(() => {
-      renderSeparator(currentOptions);
+  describe('orientation prop', () => {
+    it('defaults to horizontal', () => {
+      render(<Separator />);
+      expect(screen.getByTestId('separator')).toHaveAttribute('data-orientation', 'horizontal');
     });
 
-    afterEach(() => {
-      cleanup()
-      jest.clearAllMocks()
+    it('accepts horizontal orientation', () => {
+      render(<Separator orientation="horizontal" />);
+      expect(screen.getByTestId('separator')).toHaveAttribute('data-orientation', 'horizontal');
     });
 
-    it('must render the separator element', () => {
-      expect(screen.getByTestId('separator')).toBeInTheDocument();
+    it('accepts vertical orientation', () => {
+      render(<Separator orientation="vertical" />);
+      expect(screen.getByTestId('separator')).toHaveAttribute('data-orientation', 'vertical');
+    });
+  });
+
+  describe('decorative prop', () => {
+    it('defaults to true (no role attribute)', () => {
+      render(<Separator />);
+      expect(screen.getByTestId('separator')).not.toHaveAttribute('role', 'separator');
     });
 
-    describe('when passing prop "orientation"', () => {
-      describe('when passing as "horizontal" (default)', () => {
-        beforeAll(() => {
-          currentOptions = { orientation: 'horizontal' };
-        });
-
-        it('must render with horizontal orientation', () => {
-          expect(screen.getByTestId('separator')).toHaveAttribute('data-orientation', 'horizontal');
-        });
-      });
-
-      describe('when passing as "vertical"', () => {
-        beforeAll(() => {
-          currentOptions = { orientation: 'vertical' };
-        });
-
-        it('must render with vertical orientation', () => {
-          expect(screen.getByTestId('separator')).toHaveAttribute('data-orientation', 'vertical');
-        });
-      });
+    it('when true, does not have role separator', () => {
+      render(<Separator decorative={true} />);
+      expect(screen.getByTestId('separator')).not.toHaveAttribute('role', 'separator');
     });
 
-    describe('when passing prop "decorative"', () => {
-      describe('when passing as "true" (default)', () => {
-        beforeAll(() => {
-          currentOptions = { decorative: true };
-        });
-
-        it('must render a separator element with role as separator', () => {
-          expect(screen.getByTestId('separator')).not.toHaveAttribute('role', 'separator');
-        });
-      });
-
-      describe('when passing as "false"', () => {
-        beforeAll(() => {
-          currentOptions = { decorative: false };
-        });
-
-        it('must render a separator element with no role as separator', () => {
-          expect(screen.getByTestId('separator')).toHaveAttribute('role', 'separator');
-        });
-      });
+    it('when false, has role separator', () => {
+      render(<Separator decorative={false} />);
+      expect(screen.getByTestId('separator')).toHaveAttribute('role', 'separator');
     });
   });
 });

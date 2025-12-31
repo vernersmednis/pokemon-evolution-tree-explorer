@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { cleanup, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import {
   Card,
   CardHeader,
@@ -11,85 +11,62 @@ import {
 } from '../card';
 import { Typography } from '../typography';
 
-describe('Card component behavior', () => {
+describe('Card', () => {
+  const renderFullCard = () => render(
+    <Card>
+      <CardHeader>
+        <CardTitle>Team spotlight</CardTitle>
+        <CardDescription>Rare catch summary</CardDescription>
+        <CardAction>
+          <button type='button'>Edit team</button>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <Typography>Charizard · Pikachu · Blastoise</Typography>
+      </CardContent>
+      <CardFooter>
+        <Typography as="span" variant="caption">Updated just now</Typography>
+      </CardFooter>
+    </Card>
+  );
 
-  // Helper to render `Card` with a full composition.
-  const renderCard = () => {
-    return render(
-      <Card>
-        <CardHeader>
-          <CardTitle>Team spotlight</CardTitle>
-          <CardDescription>Rare catch summary</CardDescription>
-          <CardAction>
-            <button type='button'>Edit team</button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <Typography>Charizard · Pikachu · Blastoise</Typography>
-        </CardContent>
-        <CardFooter>
-          <Typography as="span" variant="caption">Updated just now</Typography>
-        </CardFooter>
-      </Card>
-    );
-  };
+  it('renders card root component', () => {
+    renderFullCard();
+    expect(screen.getByTestId('card')).toBeInTheDocument();
+  });
 
-  describe('when initialized', () => {
-    beforeEach(() => {
-      renderCard();
-    });
+  it('renders card header component', () => {
+    renderFullCard();
+    expect(screen.getByTestId('card-header')).toBeInTheDocument();
+  });
 
-    afterEach(() => {
-      cleanup()
-      jest.clearAllMocks()
-    })
+  it('renders card title component and content', () => {
+    renderFullCard();
+    expect(screen.getByTestId('card-title')).toBeInTheDocument();
+    expect(screen.getByText('Team spotlight')).toBeInTheDocument();
+  });
 
-    it('must render card root component', () => {
-      expect(screen.getByTestId('card')).toBeInTheDocument();
-    });
+  it('renders card description component and content', () => {
+    renderFullCard();
+    expect(screen.getByTestId('card-description')).toBeInTheDocument();
+    expect(screen.getByText('Rare catch summary')).toBeInTheDocument();
+  });
 
-    it('must render card header component', () => {
-      expect(screen.getByTestId('card-header')).toBeInTheDocument();
-    });
+  it('renders card action component and content', () => {
+    renderFullCard();
+    expect(screen.getByTestId('card-action')).toBeInTheDocument();
+    expect(screen.getByText('Edit team')).toBeInTheDocument();
+  });
 
-    it('must render card title component', () => {
-      expect(screen.getByTestId('card-title')).toBeInTheDocument();
-    });
+  it('renders card content component and content', () => {
+    renderFullCard();
+    expect(screen.getByTestId('card-content')).toBeInTheDocument();
+    expect(screen.getByText('Charizard · Pikachu · Blastoise')).toBeInTheDocument();
+  });
 
-    it('must render card title content', () => {
-      expect(screen.getByText('Team spotlight')).toBeInTheDocument();
-    });
-
-    it('must render card description component', () => {
-      expect(screen.getByTestId('card-description')).toBeInTheDocument();
-    });
-
-    it('must render card description content', () => {
-      expect(screen.getByText('Rare catch summary')).toBeInTheDocument();
-    });
-
-    it('must render card action component', () => {
-      expect(screen.getByTestId('card-action')).toBeInTheDocument();
-    });
-
-    it('must render card action content', () => {
-      expect(screen.getByText('Edit team')).toBeInTheDocument();
-    });
-
-    it('must render card content component', () => {
-      expect(screen.getByTestId('card-content')).toBeInTheDocument();
-    });
-
-    it('must render card content content', () => {
-      expect(screen.getByText('Charizard · Pikachu · Blastoise')).toBeInTheDocument();
-    });
-
-    it('must render card footer component', () => {
-      expect(screen.getByTestId('card-footer')).toBeInTheDocument();
-    });
-
-    it('must render card footer content', () => {
-      expect(screen.getByText('Updated just now')).toBeInTheDocument();
-    });
+  it('renders card footer component and content', () => {
+    renderFullCard();
+    expect(screen.getByTestId('card-footer')).toBeInTheDocument();
+    expect(screen.getByText('Updated just now')).toBeInTheDocument();
   });
 });

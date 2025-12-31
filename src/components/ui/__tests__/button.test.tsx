@@ -1,107 +1,50 @@
 import '@testing-library/jest-dom';
-import { cleanup, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Button } from '../button';
-import type { ReactNode } from 'react';
 
-describe('Button component behavior', () => {
-  let user: ReturnType<typeof userEvent.setup>
+describe('Button', () => {
+  it('renders a button element', () => {
+    render(<Button>Catch Pokemon</Button>);
+    expect(screen.getByTestId('button')).toBeInTheDocument();
+  });
 
-  beforeEach(() => {
-    user = userEvent.setup()
-  })
+  it('renders button text', () => {
+    render(<Button>Catch Pokemon</Button>);
+    expect(screen.getByText('Catch Pokemon')).toBeInTheDocument();
+  });
 
-  // Helper to render `Button` in tests. 
-  const renderButton = (options: {
-    asChild?: boolean;
-    children?: ReactNode,
-    onClick?: () => void;
-  } = {}) => {
-
-    return render(
-      <Button asChild={options.asChild} onClick={options.onClick}>
-        {options.children}
-      </Button>
-    );
-  };
-
-  describe('when initialized', () => {
-    const defaultOptions: {
-      asChild?: boolean;
-      children?: ReactNode,
-      onClick?: () => void;
-    } = { children: 'Catch Pokemon' };
-    let currentOptions = defaultOptions;
-
-    beforeEach(() => {
-      renderButton(currentOptions);
+  describe('asChild prop', () => {
+    it('defaults to false (renders as button)', () => {
+      render(<Button>Catch Pokemon</Button>);
+      const button = screen.getByTestId('button');
+      expect(button.tagName).toBe('BUTTON');
     });
 
-    afterEach(() => {
-      cleanup()
-      jest.clearAllMocks()
+    it('when false, renders as button', () => {
+      render(<Button asChild={false}>Catch Pokemon</Button>);
+      const button = screen.getByTestId('button');
+      expect(button.tagName).toBe('BUTTON');
     });
 
-    it('must render the button element', () => {
-      expect(screen.getByTestId('button')).toBeInTheDocument();
+    it('when true, renders as child element', () => {
+      render(<Button asChild><a href="/pokedex">Open Pokedex</a></Button>);
+      const button = screen.getByTestId('button');
+      expect(button.tagName).toBe('A');
+      expect(button).toHaveAttribute('href', '/pokedex');
     });
+  });
 
-    it('must render the button text', () => {
-      expect(screen.getByText('Catch Pokemon')).toBeInTheDocument();
-    });
-
-    describe('when passing prop "asChild"', () => {
-      describe('when passing as "false" (default)', () => {
-        beforeAll(() => {
-          currentOptions = { 
-            ...defaultOptions,
-            asChild: false 
-          };
-        });
-
-        it('must render the button element as a button', () => {
-          const button = screen.getByTestId('button');
-          expect(button).toBeInTheDocument();
-          expect(button.tagName).toBe('BUTTON');
-        });
-      });
-
-      describe('when passing as "true"', () => {
-        beforeAll(() => {
-          currentOptions = {
-            asChild: true,
-            children: <a href="/pokedex">Open Pokedex</a>,
-          };
-        });
-
-        describe('when rendering as an anchor element', () => {
-          it('must render the button element as an anchor', () => {
-            const button = screen.getByTestId('button');
-            expect(button).toBeInTheDocument();
-            expect(button).toHaveAttribute('href', '/pokedex');
-          });
-        });
-      });
-    });
-
-    describe('when passing prop "onClick"', () => {
+  describe('onClick prop', () => {
+    it('calls onClick when clicked', async () => {
+      const user = userEvent.setup();
       const handleClick = jest.fn();
 
-      beforeAll(() => {
-        currentOptions = { 
-          ...defaultOptions,
-          onClick: handleClick };
-      });
+      render(<Button onClick={handleClick}>Catch Pokemon</Button>);
 
-      describe('when clicking the button', () => {
-        beforeEach(async () => {
-          await user.click(screen.getByTestId('button'));
-        });
+      await user.click(screen.getByTestId('button'));
 
-        it('must trigger the onClick event', () => {
-          expect(handleClick).toHaveBeenCalled();
-        });
-      });
+      expect(handleClick).toHaveBeenCalledTimes(1);
     });
   });
 });

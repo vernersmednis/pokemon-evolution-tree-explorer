@@ -11,21 +11,6 @@ globalThis.ResizeObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
-// jest.mock('@radix-ui/react-tooltip', () => {
-//   const actual = jest.requireActual('@radix-ui/react-tooltip');
-//   return {
-//     ...actual,
-//     Tooltip: (props: any) => {
-//       console.log('[radix] Tooltip render');
-//       return actual.Tooltip(props);
-//     },
-//     TooltipContent: React.forwardRef((props: any, ref: any) => {
-//       console.log('[radix] TooltipContent', { state: props['data-state'] });
-//       return actual.TooltipContent({ ...props, ref });
-//     }),
-//   };
-// });
-
 describe('Tooltip', () => {
   const renderTooltip = () => render(
     <Tooltip>

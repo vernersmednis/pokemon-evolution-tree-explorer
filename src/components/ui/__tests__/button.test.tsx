@@ -6,7 +6,7 @@ import { Button } from '../button';
 describe('Button', () => {
   it('renders a button element', () => {
     render(<Button>Catch Pokemon</Button>);
-    expect(screen.getByTestId('button')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Catch Pokemon' })).toBeInTheDocument();
   });
 
   it('renders button text', () => {
@@ -17,19 +17,19 @@ describe('Button', () => {
   describe('asChild prop', () => {
     it('defaults to false (renders as button)', () => {
       render(<Button>Catch Pokemon</Button>);
-      const button = screen.getByTestId('button');
+      const button = screen.getByRole('button', { name: 'Catch Pokemon' });
       expect(button.tagName).toBe('BUTTON');
     });
 
     it('when false, renders as button', () => {
       render(<Button asChild={false}>Catch Pokemon</Button>);
-      const button = screen.getByTestId('button');
+      const button = screen.getByRole('button', { name: 'Catch Pokemon' });
       expect(button.tagName).toBe('BUTTON');
     });
 
     it('when true, renders as child element', () => {
       render(<Button asChild><a href="/pokedex">Open Pokedex</a></Button>);
-      const button = screen.getByTestId('button');
+      const button = screen.getByRole('link', { name: 'Open Pokedex' });
       expect(button.tagName).toBe('A');
       expect(button).toHaveAttribute('href', '/pokedex');
     });
@@ -42,7 +42,7 @@ describe('Button', () => {
 
       render(<Button onClick={handleClick}>Catch Pokemon</Button>);
 
-      await user.click(screen.getByTestId('button'));
+      await user.click(screen.getByRole('button', { name: 'Catch Pokemon' }));
 
       expect(handleClick).toHaveBeenCalledTimes(1);
     });

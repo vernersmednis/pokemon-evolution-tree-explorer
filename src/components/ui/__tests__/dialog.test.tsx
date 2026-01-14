@@ -14,7 +14,7 @@ import {
 import { Typography } from '../typography';
 
 describe('Dialog', () => {
-  const renderFullDialog = (showCloseButton = false) => render(
+  const renderFullDialog = (showCloseButton?: boolean) => render(
     <Dialog>
       <DialogTrigger>Open dialog</DialogTrigger>
       <DialogHeader>
@@ -35,21 +35,17 @@ describe('Dialog', () => {
   describe('initial state', () => {
     it('does not render dialog content initially', () => {
       renderFullDialog();
-      expect(screen.queryByTestId('dialog-content')).not.toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 
-    it('renders dialog trigger', () => {
+    it('renders dialog trigger (and its content)', () => {
       renderFullDialog();
-      expect(screen.getByTestId('dialog-trigger')).toBeInTheDocument();
-      expect(screen.getByText('Open dialog')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Open dialog' })).toBeInTheDocument();
     });
 
-    it('renders dialog header components', () => {
+    it('renders dialog title and description (and their content)', () => {
       renderFullDialog();
-      expect(screen.getByTestId('dialog-header')).toBeInTheDocument();
-      expect(screen.getByTestId('dialog-title')).toBeInTheDocument();
-      expect(screen.getByText('Dex entry')).toBeInTheDocument();
-      expect(screen.getByTestId('dialog-description')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Dex entry' })).toBeInTheDocument();
       expect(screen.getByText('Bulbasaur naps in the sun')).toBeInTheDocument();
     });
   });
@@ -59,11 +55,10 @@ describe('Dialog', () => {
       const user = userEvent.setup();
       renderFullDialog();
 
-      await user.click(screen.getByTestId('dialog-trigger'));
+      await user.click(screen.getByRole('button', { name: 'Open dialog' }));
 
-      expect(await screen.findByTestId('dialog-content')).toBeInTheDocument();
+      expect(await screen.findByRole('dialog')).toBeInTheDocument();
       expect(screen.getByText('Template content')).toBeInTheDocument();
-      expect(screen.getByTestId('dialog-footer')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Dismiss' })).toBeInTheDocument();
     });
 
@@ -72,47 +67,59 @@ describe('Dialog', () => {
         const user = userEvent.setup();
         renderFullDialog();
 
-        await user.click(screen.getByTestId('dialog-trigger'));
-        await screen.findByTestId('dialog-content');
+        await user.click(screen.getByRole('button', { name: 'Open dialog' }));
+        await screen.findByRole('dialog');
 
         await user.click(screen.getByRole('button', { name: 'Dismiss' }));
 
-        expect(screen.queryByTestId('dialog-content')).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
     });
 
     describe('showCloseButton prop', () => {
-      it('shows only custom close button by default', async () => {
+      it('shows both default and custom close buttons by default', async () => {
+        const user = userEvent.setup();
+        renderFullDialog();
+
+        await user.click(screen.getByRole('button', { name: 'Open dialog' }));
+        await screen.findByRole('dialog');
+
+        expect(screen.getByRole('button', { name: 'Dismiss' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+      });
+
+      it('shows only custom close button when false', async () => {
         const user = userEvent.setup();
         renderFullDialog(false);
 
-        await user.click(screen.getByTestId('dialog-trigger'));
-        await screen.findByTestId('dialog-content');
+        await user.click(screen.getByRole('button', { name: 'Open dialog' }));
+        await screen.findByRole('dialog');
 
-        expect(screen.getAllByTestId('dialog-close')).toHaveLength(1);
+        expect(screen.getByRole('button', { name: 'Dismiss' })).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
       });
 
       it('shows both default and custom close buttons when true', async () => {
         const user = userEvent.setup();
         renderFullDialog(true);
 
-        await user.click(screen.getByTestId('dialog-trigger'));
-        await screen.findByTestId('dialog-content');
+        await user.click(screen.getByRole('button', { name: 'Open dialog' }));
+        await screen.findByRole('dialog');
 
-        expect(screen.getAllByTestId('dialog-close')).toHaveLength(2);
+        expect(screen.getByRole('button', { name: 'Dismiss' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
       });
 
       it('closes when default close button is clicked', async () => {
         const user = userEvent.setup();
-        renderFullDialog(true);
+        renderFullDialog();
 
-        await user.click(screen.getByTestId('dialog-trigger'));
-        await screen.findByTestId('dialog-content');
+        await user.click(screen.getByRole('button', { name: 'Open dialog' }));
+        await screen.findByRole('dialog');
 
-        const closeButtons = screen.getAllByTestId('dialog-close');
-        await user.click(closeButtons[1]); // Click the default close button
+        await user.click(screen.getByRole('button', { name: 'Close' }));
 
-        expect(screen.queryByTestId('dialog-content')).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
     });
   });

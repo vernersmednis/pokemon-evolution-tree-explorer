@@ -30,43 +30,28 @@ describe('Card', () => {
     </Card>
   );
 
-  it('renders card root component', () => {
+  it('renders card with title component (and its text)', () => {
     renderFullCard();
-    expect(screen.getByTestId('card')).toBeInTheDocument();
-  });
-
-  it('renders card header component', () => {
-    renderFullCard();
-    expect(screen.getByTestId('card-header')).toBeInTheDocument();
-  });
-
-  it('renders card title component and content', () => {
-    renderFullCard();
-    expect(screen.getByTestId('card-title')).toBeInTheDocument();
     expect(screen.getByText('Team spotlight')).toBeInTheDocument();
   });
 
-  it('renders card description component and content', () => {
+  it('renders card with description component (and its text)', () => {
     renderFullCard();
-    expect(screen.getByTestId('card-description')).toBeInTheDocument();
     expect(screen.getByText('Rare catch summary')).toBeInTheDocument();
   });
 
-  it('renders card action component and content', () => {
+  it('renders card with action button (and its content)', () => {
     renderFullCard();
-    expect(screen.getByTestId('card-action')).toBeInTheDocument();
-    expect(screen.getByText('Edit team')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Edit team' })).toBeInTheDocument();
   });
 
-  it('renders card content component and content', () => {
+  it('renders card with content component (and its content)', () => {
     renderFullCard();
-    expect(screen.getByTestId('card-content')).toBeInTheDocument();
     expect(screen.getByText('Charizard · Pikachu · Blastoise')).toBeInTheDocument();
   });
 
-  it('renders card footer component and content', () => {
+  it('renders card with footer component (and its content)', () => {
     renderFullCard();
-    expect(screen.getByTestId('card-footer')).toBeInTheDocument();
     expect(screen.getByText('Updated just now')).toBeInTheDocument();
   });
 });

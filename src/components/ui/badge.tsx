@@ -37,7 +37,6 @@ function Badge({
   return (
     <Comp
       data-slot="badge"
-      data-testid="badge"
       className={cn(badgeVariants({ variant }), className)}
       {...props}
     />

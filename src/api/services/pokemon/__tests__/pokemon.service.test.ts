@@ -1,8 +1,6 @@
 import { getPokemon, getPokemonSpecies, getEvolutionChain } from '../pokemon.service';
 import { api } from '@/api/api';
 import {
-  mockWurmpleApiResponse,
-  mockWurmpleSpeciesResponse,
   mockWurmpleEvolutionChainResponse,
   mockPikachuApiResponse,
   mockPikachuSpeciesResponse,
@@ -66,7 +64,7 @@ describe('Pokemon Service', () => {
       expect(mockApi.get).toHaveBeenCalledWith('/evolution-chain/10');
       expect(result).toBe(mockPichuEvolutionChainResponse);
     });
-    
+
     it('should return branching evolution chain data successfully', async () => {
       mockApi.get.mockResolvedValue(mockWurmpleEvolutionChainResponse);
 

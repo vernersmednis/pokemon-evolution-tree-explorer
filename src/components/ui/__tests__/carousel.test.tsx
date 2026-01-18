@@ -93,7 +93,10 @@ jest.mock('embla-carousel-react', () => {
   }
 })
 
-type MockCarouselOptions = object
+// These are the minimal carousel options for this testing suite
+type MockCarouselOptions = {
+  startIndex?: number;
+}
 
 describe('Carousel suite', () => {
   const initialIndex = 0 // Define this if needed

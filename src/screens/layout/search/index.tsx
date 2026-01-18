@@ -17,7 +17,7 @@ const Search = ({ className }: SearchProps) => {
   };
 
   return (
-    <div className={cn(className, "flex justify-center gap-2")}>
+    <div className={cn(className, "flex gap-2")}>
       <Input
         type="text"
         placeholder="Search for a Pokémon (e.g., pikachu, charizard)..."

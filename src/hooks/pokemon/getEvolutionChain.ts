@@ -1,7 +1,7 @@
 import { getPokemonSpecies, getEvolutionChain, getPokemon } from "@/api/services/pokemon";
 import { useQuery } from '@tanstack/react-query';
 import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemon';
-import type { EvolutionChainNode } from '@/types/evolutionChain';
+import type { EvolutionChainNode } from '@/types/evolutionChainNode';
 
 // WeakMap to store parent relationships without circular references
 export const parentMap = new WeakMap();
@@ -43,12 +43,12 @@ const transformEvolutionChain = async (chain: EvolutionChainNode) => {
   return [await processChain(chain)];
 };
 
-export const useGetEvolutionChain = (pokemonId: string) => {
+export const useGetEvolutionChain = (speciesName: string) => {
   return useQuery({
-    queryKey: ["evolutionChain", pokemonId],
+    queryKey: ["evolutionChain", speciesName],
     queryFn: async () => {
       // Get the pokemon species to get the evolution chain URL
-      const speciesResponse = await getPokemonSpecies(pokemonId);
+      const speciesResponse = await getPokemonSpecies(speciesName);
       const evolutionChainUrl = speciesResponse.data.evolution_chain.url;
       
       // Extract the evolution chain ID from the URL
@@ -60,6 +60,6 @@ export const useGetEvolutionChain = (pokemonId: string) => {
       // Transform to EvolutionChainNodePokemon[] format
       return await transformEvolutionChain(evolutionChainResponse.data.chain);
     },
-    enabled: !!pokemonId,
+    enabled: !!speciesName,
   });
 };

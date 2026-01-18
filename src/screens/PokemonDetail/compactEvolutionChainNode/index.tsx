@@ -10,7 +10,7 @@ const CompactEvolutionChainNode = ({
   const evolutionNumber = `${branchIndex}.${depth}`;
 
   return (
-    <>
+    <div data-testid={`compact-evolution-chain-node-${pokemon.id}`}>
       <div className="flex items-center gap-2 mb-2">
         <Typography variant="caption">
           {evolutionNumber}
@@ -29,7 +29,7 @@ const CompactEvolutionChainNode = ({
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

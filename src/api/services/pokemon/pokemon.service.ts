@@ -5,8 +5,8 @@ export const getPokemon = (name: string) => {
   return response;
 };
 
-export const getPokemonSpecies = (id: string) => {
-  const response = api.get(`/pokemon-species/${id}`);
+export const getPokemonSpecies = (name: string) => {
+  const response = api.get(`/pokemon-species/${name}`);
   return response;
 };
 

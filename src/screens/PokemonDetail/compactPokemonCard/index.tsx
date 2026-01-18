@@ -49,6 +49,7 @@ const CompactPokemonCard = ({ pokemon }: CompactPokemonCardProps) => {
             variant="pokeball-outline"
             className="cursor-pointer py-0"
             onClick={() => setDialogOpen(true)}
+            data-testid={`compact-pokemon-card-${pokemon.id}`}
           >
             <CardContent className="flex items-center gap-2 p-2">
               {/* Pokemon Image */}
@@ -79,6 +80,7 @@ const CompactPokemonCard = ({ pokemon }: CompactPokemonCardProps) => {
             Browse through the evolution chain of {pokemon.name}. Use the arrows to navigate between evolution stages.
           </DialogDescription>
           <Carousel
+            data-testid={`compact-pokemon-card-evolution-carousel-${pokemon.id}`}
             orientation="vertical"
             opts={{
               startIndex: initialIndex,

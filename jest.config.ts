@@ -24,6 +24,12 @@ const config: Config = {
         tsconfig: {
           jsx: 'react-jsx',
           esModuleInterop: true,
+          moduleResolution: 'node',
+          allowSyntheticDefaultImports: true,
+          baseUrl: '.',
+          paths: {
+            '@/*': ['./src/*'],
+          },
         },
       },
     ],

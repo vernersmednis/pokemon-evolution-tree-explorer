@@ -5,7 +5,8 @@ import type { CompactEvolutionChainNodeProps } from "./types";
 const CompactEvolutionChainNode = ({ 
   pokemon, 
   depth = 1, 
-  branchIndex = 1 
+  branchIndex = 1,
+  onCardClick 
 }: CompactEvolutionChainNodeProps) => {
   const evolutionNumber = `${branchIndex}.${depth}`;
 
@@ -16,7 +17,7 @@ const CompactEvolutionChainNode = ({
           {evolutionNumber}
         </Typography>
         <div className="flex-1">
-          <CompactPokemonCard pokemon={pokemon} />
+          <CompactPokemonCard pokemon={pokemon} onCardClick={onCardClick} />
         </div>
       </div>
       <div className="ml-8">
@@ -26,6 +27,7 @@ const CompactEvolutionChainNode = ({
             pokemon={evolution} 
             depth={depth + 1}
             branchIndex={branchIndex + index}
+            onCardClick={onCardClick}
           />
         ))}
       </div>

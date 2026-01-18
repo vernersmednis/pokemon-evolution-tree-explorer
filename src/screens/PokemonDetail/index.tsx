@@ -1,16 +1,51 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, useMemo, useCallback } from "react";
 import EvolutionChainNode  from "./evolutionChainNode";
 import CompactEvolutionChainNode from "./compactEvolutionChainNode";
 import { useParams } from "react-router-dom";
-import { useGetEvolutionChain } from "@/hooks/pokemon/getEvolutionChain";
+import { useGetEvolutionChain, parentMap } from "@/hooks/pokemon/getEvolutionChain";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselProgressIndicator } from "@/components/ui/carousel";
+import PokemonCard from "./pokemonCard";
+import type { EvolutionChainNodePokemon } from "@/types/evolutionChainNodePokemon";
+
+// Helper functions for evolution tree traversal
+const findRoot = (pokemon: EvolutionChainNodePokemon) => {
+  let current = pokemon;
+  while (parentMap.has(current)) current = parentMap.get(current)!;
+  return current;
+};
+
+// Build DFS list and compute evolution numbers
+const buildDFSListWithNumbers = (
+  pokemon: EvolutionChainNodePokemon, depth = 1, branchIndex = 1
+): EvolutionChainNodePokemon[] => {
+  const evolutionNumber = `${branchIndex}.${depth}`;
+  const pokemonWithNumber = { ...pokemon, evolutionNumber };
+  const children = pokemon.evolvesTo.flatMap((child, index) =>
+    buildDFSListWithNumbers(child, depth + 1, branchIndex + index)
+  );
+  return [pokemonWithNumber, ...children];
+};
 
 const PokemonDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { data: evolutionChain, isLoading, error } = useGetEvolutionChain(id || "");
 
-
   const [useVertical, setUseVertical] = useState(false);
   const verticalRef = useRef(null);
+
+  // Dialog state for the compact card evolution carousel
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedPokemon, setSelectedPokemon] = useState<EvolutionChainNodePokemon | null>(null);
+
+  const handleCardClick = useCallback((pokemon: EvolutionChainNodePokemon) => {
+    setSelectedPokemon(pokemon);
+    setDialogOpen(true);
+  }, []);
+
+  const evolutionList = useMemo(() => selectedPokemon ? buildDFSListWithNumbers(findRoot(selectedPokemon)) : [], [selectedPokemon]);
+  const initialIndex = useMemo(() => evolutionList.findIndex(p => p.id === selectedPokemon?.id), [evolutionList, selectedPokemon]);
+  const evolutionLabels = useMemo(() => evolutionList.map(p => p.evolutionNumber || ''), [evolutionList]);
 
   // Dynamic Overflow Detection for switching between mobile view and desktop view
   useLayoutEffect(() => {
@@ -47,9 +82,42 @@ const PokemonDetail = () => {
       </div>
       <div className={`${useVertical ? "" : "hidden"} font-mono text-sm pl-0`}>
         {evolutionChain.map((pokemon) => (
-          <CompactEvolutionChainNode key={pokemon.id} pokemon={pokemon} />
+          <CompactEvolutionChainNode key={pokemon.id} pokemon={pokemon} onCardClick={handleCardClick} />
         ))}
       </div>
+
+      {/* Single shared dialog for all compact cards */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="w-fit h-fit">
+          <DialogTitle className="sr-only">
+            {selectedPokemon?.name} Evolution Chain
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Browse through the evolution chain of {selectedPokemon?.name}. Use the arrows to navigate between evolution stages.
+          </DialogDescription>
+          {selectedPokemon && (
+            <Carousel
+              key={selectedPokemon.id}
+              data-testid={`compact-pokemon-card-evolution-carousel-${selectedPokemon.id}`}
+              orientation="vertical"
+              opts={{
+                startIndex: initialIndex,
+              }}
+            >
+              <CarouselPrevious variant={"pokeball-ghost"} positioning={"secondary"} />
+              <CarouselContent className="">
+                {evolutionList.map(pokemon => (
+                  <CarouselItem key={pokemon.id}>
+                    <PokemonCard pokemon={pokemon} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselNext variant={"pokeball-ghost"} positioning={"secondary"} />
+              <CarouselProgressIndicator labels={evolutionLabels} variant="pokeball" />
+            </Carousel>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

@@ -2,4 +2,5 @@ import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemo
 
 export interface CompactPokemonCardProps {
   pokemon: EvolutionChainNodePokemon;
+  onCardClick?: (pokemon: EvolutionChainNodePokemon) => void;
 }

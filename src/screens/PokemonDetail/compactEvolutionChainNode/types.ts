@@ -4,4 +4,5 @@ export interface CompactEvolutionChainNodeProps {
   pokemon: EvolutionChainNodePokemon;
   depth?: number;
   branchIndex?: number;
+  onCardClick?: (pokemon: EvolutionChainNodePokemon) => void;
 }

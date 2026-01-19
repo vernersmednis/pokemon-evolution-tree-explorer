@@ -10,7 +10,8 @@ describe('CompactPokemonCard', () => {
     describe('basic rendering', () => {
         
         it('should render Pokemon image', () => {
-            render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} />);
+            const onCardClick = jest.fn();
+            render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} onCardClick={onCardClick} />);
 
             const img = screen.getByAltText('wurmple');
             expect(img).toHaveAttribute(
@@ -20,14 +21,16 @@ describe('CompactPokemonCard', () => {
         });
 
         it('should render Pokemon name', () => {
-            render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} />);
+            const onCardClick = jest.fn();
+            render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} onCardClick={onCardClick} />);
 
             const name = screen.getByText('wurmple');
             expect(name).toBeInTheDocument();
         });
 
         it('should render Pokemon badge (type)', () => {
-            render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} />);
+            const onCardClick = jest.fn();
+            render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} onCardClick={onCardClick} />);
 
             const badge = screen.getByText('bug'); 
             expect(badge).toBeInTheDocument();
@@ -43,7 +46,8 @@ describe('CompactPokemonCard', () => {
         });
 
         it('falls back to Normal type styles when the pokemon has no types', () => {
-            render(<CompactPokemonCard pokemon={mockPokemonWithNoTypesEvolutionChainNodePokemon} />);
+            const onCardClick = jest.fn();
+            render(<CompactPokemonCard pokemon={mockPokemonWithNoTypesEvolutionChainNodePokemon} onCardClick={onCardClick} />);
  
             const badge = screen.getByText('Normal');
             expect(badge).toHaveClass(typeColors['Normal']);
@@ -52,14 +56,16 @@ describe('CompactPokemonCard', () => {
 
     describe('image handling', () => {
         it('should have proper alt text', () => {
-          render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} />);
+          const onCardClick = jest.fn();
+          render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} onCardClick={onCardClick} />);
 
           const img = screen.getByAltText('wurmple');
           expect(img).toBeInTheDocument(); 
         });
 
       it('should apply correct size styling to image', () => {
-          render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} />);
+          const onCardClick = jest.fn();
+          render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} onCardClick={onCardClick} />);
 
           const img = screen.getByAltText('wurmple');
           expect(img).toHaveClass('w-8', 'h-8', 'object-contain');

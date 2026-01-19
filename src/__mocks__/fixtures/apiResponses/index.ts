@@ -5078,7 +5078,7 @@ export const mockPokemonWithNoTypesApiResponse = {
         },
       },
     },
-    types: [], // No types
+    types: [{ slot: 1, type: { name: '', url: '' } }], // Type with empty name
     stats: [
       { base_stat: 50, stat: { name: 'hp' } },
       { base_stat: 50, stat: { name: 'attack' } },

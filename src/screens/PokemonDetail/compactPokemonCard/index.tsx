@@ -6,9 +6,9 @@ import { Typography } from '@/components/ui/typography';
 import { Card, CardContent } from "@/components/ui/card";
 
 const CompactPokemonCard = ({ pokemon, onCardClick }: CompactPokemonCardProps) => {
-  const pokemonType = pokemon.types?.[0]?.type?.name || 'Normal';
-  const bgColor = typeColors[pokemonType] || typeColors['Normal'];
-  const imageUrl = pokemon.sprites?.other?.['official-artwork']?.front_default || '';
+  const pokemonType = pokemon.types[0].type.name || 'Normal';
+  const bgColor = typeColors[pokemonType];
+  const imageUrl = pokemon.sprites.other!['official-artwork']!.front_default;
 
   return (
     <Tooltip>
@@ -16,7 +16,7 @@ const CompactPokemonCard = ({ pokemon, onCardClick }: CompactPokemonCardProps) =
         <Card 
           variant="pokeball-outline"
           className="cursor-pointer py-0"
-          onClick={() => onCardClick?.(pokemon)}
+          onClick={() => onCardClick(pokemon)}
           data-testid={`compact-pokemon-card-${pokemon.id}`}
         >
           <CardContent className="flex items-center gap-2 p-2">

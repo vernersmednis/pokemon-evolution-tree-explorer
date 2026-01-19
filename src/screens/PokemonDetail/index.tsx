@@ -22,7 +22,7 @@ const buildDFSListWithNumbers = (
 
 const PokemonDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: evolutionChain, isLoading, error } = useGetEvolutionChain(id || "");
+  const { data: evolutionChain, isLoading, error } = useGetEvolutionChain(id);
 
   const [useVertical, setUseVertical] = useState(false);
   const verticalRef = useRef(null);
@@ -36,9 +36,9 @@ const PokemonDetail = () => {
     setDialogOpen(true);
   }, []);
 
-  const evolutionList = useMemo(() => evolutionChain?.flatMap(pokemon => buildDFSListWithNumbers(pokemon)) ?? [], [evolutionChain]);
-  const initialIndex = useMemo(() => evolutionList.findIndex(p => p.id === selectedPokemon?.id), [evolutionList, selectedPokemon]);
-  const evolutionLabels = useMemo(() => evolutionList.map(p => p.evolutionNumber || ''), [evolutionList]);
+  const evolutionList = useMemo(() => evolutionChain?.flatMap(pokemon => buildDFSListWithNumbers(pokemon)), [evolutionChain]);
+  const initialIndex = useMemo(() => evolutionList?.findIndex(p => p.id === selectedPokemon?.id) ?? -1, [evolutionList, selectedPokemon]);
+  const evolutionLabels = useMemo(() => evolutionList?.map(p => p.evolutionNumber!), [evolutionList]);
 
   // Dynamic Overflow Detection for switching between mobile view and desktop view
   useLayoutEffect(() => {
@@ -63,18 +63,17 @@ const PokemonDetail = () => {
 
   if (isLoading) return <div>Loading evolution chain...</div>;
   if (error) return <div>Error loading evolution chain: {error.message}</div>;
-  if (!evolutionChain || evolutionChain.length === 0) return <div>No evolution chain found</div>;
 
   return (
     <>
       {/* Evolution Chain Container - Dynamic Overflow Detection */}
       <div ref={verticalRef} className={`${useVertical ? "hidden" : ""} mt-8 px-4`}>
-        {evolutionChain.map((pokemon) => (
+        {evolutionChain && evolutionChain.map((pokemon) => (
           <EvolutionChainNode key={pokemon.id} pokemon={pokemon} />
         ))}
       </div>
       <div className={`${useVertical ? "" : "hidden"} font-mono text-sm pl-0`}>
-        {evolutionChain.map((pokemon) => (
+        {evolutionChain && evolutionChain.map((pokemon) => (
           <CompactEvolutionChainNode key={pokemon.id} pokemon={pokemon} onCardClick={handleCardClick} />
         ))}
       </div>
@@ -88,7 +87,7 @@ const PokemonDetail = () => {
           <DialogDescription className="sr-only">
             Browse through the evolution chain of {selectedPokemon?.name}. Use the arrows to navigate between evolution stages.
           </DialogDescription>
-          {selectedPokemon && (
+          {selectedPokemon && evolutionList && (
             <Carousel
               key={selectedPokemon.id}
               data-testid="pokemon-carousel"

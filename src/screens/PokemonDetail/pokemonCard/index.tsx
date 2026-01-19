@@ -6,10 +6,9 @@ import { typeColors } from "./styles";
 
 const PokemonCard = ({ pokemon }: PokemonCardProps) => {
   // Format certain pokemon data
-  const pokemonType = pokemon.types?.[0]?.type?.name || "Normal";
-  const bgColor = typeColors[pokemonType] || typeColors["Normal"];
-  const imageUrl =
-    pokemon.sprites?.other?.["official-artwork"]?.front_default || "";
+  const pokemonType = pokemon.types[0].type.name || 'Normal';
+  const bgColor = typeColors[pokemonType];
+  const imageUrl = pokemon.sprites.other!['official-artwork']!.front_default;
 
   return (
     <Card className="w-64" variant="pokeball-outline-secondary" data-testid={`pokemon-card-${pokemon.id}`}>
@@ -36,7 +35,7 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
         </div>
 
         <Typography variant="caption" as="p">
-          {pokemon.species?.name || pokemon.name}
+          {pokemon.species.name}
         </Typography>
       </CardContent>
 

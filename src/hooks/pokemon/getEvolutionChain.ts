@@ -13,12 +13,13 @@ const transformEvolutionChain = async (chain: EvolutionChainNode) => {
     // Get basic Pokemon data
     const pokemonResponse = await getPokemon(chainNode.species.name);
     const pokemonData = pokemonResponse.data;
+    const evolutionDetail = chainNode.evolution_details[0];
     
     // Create the current pokemon node (without evolvesTo first)
     const currentPokemon = {
       ...pokemonData,
-      evolutionTrigger: chainNode.evolution_details?.[0]?.trigger?.name || undefined,
-      evolutionCondition: chainNode.evolution_details?.[0]?.min_level ? `Level ${chainNode.evolution_details[0].min_level}` : undefined,
+      evolutionTrigger: evolutionDetail?.trigger?.name,
+      evolutionCondition: evolutionDetail?.min_level ? `Level ${evolutionDetail.min_level}` : undefined,
       evolvesTo: []
     };
     

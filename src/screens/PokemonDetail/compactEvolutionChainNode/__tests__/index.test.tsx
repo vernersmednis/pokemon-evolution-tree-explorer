@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import CompactEvolutionChainNode from '../index';
 import {
-  mockWurmpleEvolutionChainNode
+  mockWurmpleEvolutionChainNodePokemon
 } from '@/__mocks__/fixtures';
 
 // Mock the parentMap
@@ -13,7 +13,7 @@ jest.mock('@/hooks/pokemon/getEvolutionChain', () => ({
 
 // Helper function to render with Router
 const renderCompactEvolutionChainNode = (
-  pokemon: typeof mockWurmpleEvolutionChainNode,
+  pokemon: typeof mockWurmpleEvolutionChainNodePokemon,
   depth = 1,
   branchIndex = 1
 ) => {
@@ -28,7 +28,7 @@ describe('CompactEvolutionChainNode', () => {
   describe('recursive rendering', () => {
 
     it('should have correct parent-child nesting for entire evolution tree', () => {
-      renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNode);
+      renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
 
       // Get all compact evolution chain nodes
       const wurmpleNode = screen.getByTestId('compact-evolution-chain-node-265');
@@ -50,7 +50,7 @@ describe('CompactEvolutionChainNode', () => {
   describe('compact node content', () => {
   
     it('should render compact pokemon cards for each compact evolution chain node', () => {
-      renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNode);
+      renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
 
       // Get all compact evolution chain nodes
       const wurmpleNode = screen.getByTestId('compact-evolution-chain-node-265');
@@ -68,7 +68,7 @@ describe('CompactEvolutionChainNode', () => {
 
 
     it('each node should contain a depth and branches indexes (for example: 1.1, 1.2, 2.2, 1.3, 2.3)', () => {
-      renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNode, 1, 1);
+      renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon, 1, 1);
 
       // Get all compact evolution chain nodes
       const wurmpleNode = screen.getByTestId('compact-evolution-chain-node-265');

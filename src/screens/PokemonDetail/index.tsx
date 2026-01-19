@@ -2,18 +2,11 @@ import { useLayoutEffect, useRef, useState, useMemo, useCallback } from "react";
 import EvolutionChainNode  from "./evolutionChainNode";
 import CompactEvolutionChainNode from "./compactEvolutionChainNode";
 import { useParams } from "react-router-dom";
-import { useGetEvolutionChain, parentMap } from "@/hooks/pokemon/getEvolutionChain";
+import { useGetEvolutionChain } from "@/hooks/pokemon/getEvolutionChain";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselProgressIndicator } from "@/components/ui/carousel";
 import PokemonCard from "./pokemonCard";
 import type { EvolutionChainNodePokemon } from "@/types/evolutionChainNodePokemon";
-
-// Helper functions for evolution tree traversal
-const findRoot = (pokemon: EvolutionChainNodePokemon) => {
-  let current = pokemon;
-  while (parentMap.has(current)) current = parentMap.get(current)!;
-  return current;
-};
 
 // Build DFS list and compute evolution numbers
 const buildDFSListWithNumbers = (
@@ -43,7 +36,7 @@ const PokemonDetail = () => {
     setDialogOpen(true);
   }, []);
 
-  const evolutionList = useMemo(() => selectedPokemon ? buildDFSListWithNumbers(findRoot(selectedPokemon)) : [], [selectedPokemon]);
+  const evolutionList = useMemo(() => evolutionChain?.flatMap(pokemon => buildDFSListWithNumbers(pokemon)) ?? [], [evolutionChain]);
   const initialIndex = useMemo(() => evolutionList.findIndex(p => p.id === selectedPokemon?.id), [evolutionList, selectedPokemon]);
   const evolutionLabels = useMemo(() => evolutionList.map(p => p.evolutionNumber || ''), [evolutionList]);
 
@@ -98,7 +91,7 @@ const PokemonDetail = () => {
           {selectedPokemon && (
             <Carousel
               key={selectedPokemon.id}
-              data-testid={`compact-pokemon-card-evolution-carousel-${selectedPokemon.id}`}
+              data-testid="pokemon-carousel"
               orientation="vertical"
               opts={{
                 startIndex: initialIndex,

@@ -4,13 +4,14 @@ import {
   mockBeautiflyApiResponse,
   mockCascoonApiResponse,
   mockDustoxApiResponse,
+  mockPokemonWithNoTypesApiResponse
 } from '../apiResponses';
 
 // ===== WURMPLE FAMILY (covers branching + multi-stage evolution) =====
 
 // Wurmple -> Silcoon/Cascoon -> Beautifly/Dustox
 // This structure matches what useGetEvolutionChain hook returns (spreads full Pokemon API data)
-export const mockWurmpleEvolutionChainNode = {
+export const mockWurmpleEvolutionChainNodePokemon = {
   ...mockWurmpleApiResponse.data,
   evolutionTrigger: undefined,
   evolutionCondition: undefined,
@@ -42,4 +43,14 @@ export const mockWurmpleEvolutionChainNode = {
       ],
     },
   ],
+};
+
+// ===== EDGE CASES FOR TESTING =====
+
+// Pokemon with no types, no evolutions
+export const mockPokemonWithNoTypesEvolutionChainNodePokemon = {
+  ...mockPokemonWithNoTypesApiResponse.data,
+  evolutionTrigger: undefined,
+  evolutionCondition: undefined,
+  evolvesTo: [],
 };

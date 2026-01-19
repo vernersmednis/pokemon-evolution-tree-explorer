@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import PokemonDetail from '../index';
-import { mockWurmpleEvolutionChainNode } from '@/__mocks__/fixtures';
+import { mockWurmpleEvolutionChainNodePokemon } from '@/__mocks__/fixtures';
 
 // Mock the useGetEvolutionChain hook
 jest.mock('@/hooks/pokemon/getEvolutionChain', () => ({
   useGetEvolutionChain: jest.fn(),
-  parentMap: new WeakMap(),
 }));
 
 import { useGetEvolutionChain } from '@/hooks/pokemon/getEvolutionChain';
@@ -21,6 +21,36 @@ const mockResizeObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 globalThis.ResizeObserver = mockResizeObserver;
+
+// Mock window.matchMedia for embla-carousel
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+// Mock IntersectionObserver for embla-carousel
+class MockIntersectionObserver {
+  readonly root: Element | null = null;
+  readonly rootMargin: string = '';
+  readonly thresholds: ReadonlyArray<number> = [];
+  
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords(): IntersectionObserverEntry[] { return []; }
+}
+
+globalThis.IntersectionObserver = MockIntersectionObserver;
 
 // Helper function to render PokemonDetail with Router
 const renderPokemonDetail = (pokemonId: string) => {
@@ -49,7 +79,7 @@ describe('PokemonDetail', () => {
         isError: false,
         isSuccess: false,
       } as ReturnType<typeof useGetEvolutionChain>);
-
+ 
       renderPokemonDetail('wurmple');
 
       expect(screen.getByText('Loading evolution chain...')).toBeInTheDocument();
@@ -77,7 +107,7 @@ describe('PokemonDetail', () => {
 
     it('should render branching evolution chain', async () => {
       mockedUseGetEvolutionChain.mockReturnValue({
-        data: [mockWurmpleEvolutionChainNode],
+        data: [mockWurmpleEvolutionChainNodePokemon],
         isLoading: false,
         error: null,
         isError: false,
@@ -107,7 +137,7 @@ describe('PokemonDetail', () => {
       Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
 
       mockedUseGetEvolutionChain.mockReturnValue({
-        data: [mockWurmpleEvolutionChainNode],
+        data: [mockWurmpleEvolutionChainNodePokemon],
         isLoading: false,
         error: null,
         isError: false,
@@ -135,7 +165,7 @@ describe('PokemonDetail', () => {
       Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
 
       mockedUseGetEvolutionChain.mockReturnValue({
-        data: [mockWurmpleEvolutionChainNode],
+        data: [mockWurmpleEvolutionChainNodePokemon],
         isLoading: false,
         error: null,
         isError: false,
@@ -151,6 +181,70 @@ describe('PokemonDetail', () => {
         expect(mobileContainer).toBeInTheDocument();
         expect(mobileContainer).not.toHaveClass('hidden');
         expect(desktopContainer).toHaveClass('hidden');
+      });
+    });
+  }); 
+
+  describe('carousel dialog interactions', () => {
+    it('should open carousel dialog when clicking on a compact pokemon card', async () => {
+      // Mock scrollWidth to be larger than window width (content overflows)
+      Object.defineProperty(HTMLElement.prototype, 'scrollWidth', {
+        configurable: true,
+        value: 1500, // Content width larger than window
+      });
+      Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
+
+      mockedUseGetEvolutionChain.mockReturnValue({
+        data: [mockWurmpleEvolutionChainNodePokemon],
+        isLoading: false,
+        error: null,
+        isError: false,
+        isSuccess: true,
+      } as ReturnType<typeof useGetEvolutionChain>);
+
+      renderPokemonDetail('wurmple');
+
+      // Wait for evolution chain to load
+      await waitFor(() => {
+        expect(screen.getByTestId('compact-pokemon-card-265')).toBeInTheDocument();
+      });
+
+      // Click on a compact pokemon card
+      await userEvent.click(screen.getByTestId('compact-pokemon-card-265'));
+      // Assert dialog/carousel is open
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      // Or check for carousel-specific content
+      expect(screen.getByTestId('pokemon-carousel')).toBeInTheDocument();
+    });
+
+    it('should display correct pokemon in carousel after clicking card', async () => {
+      // Mock scrollWidth to be larger than window width (content overflows)
+      Object.defineProperty(HTMLElement.prototype, 'scrollWidth', {
+        configurable: true,
+        value: 1500, // Content width larger than window
+      });
+      Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
+
+      mockedUseGetEvolutionChain.mockReturnValue({
+        data: [mockWurmpleEvolutionChainNodePokemon],
+        isLoading: false,
+        error: null,
+        isError: false,
+        isSuccess: true,
+      } as ReturnType<typeof useGetEvolutionChain>);
+
+      renderPokemonDetail('wurmple');
+
+      await waitFor(() => {
+        expect(screen.getByTestId('compact-pokemon-card-266')).toBeInTheDocument();
+      });
+
+      await userEvent.click(screen.getByTestId('compact-pokemon-card-266'));
+
+      // Verify the carousel dialog shows the clicked pokemon's card
+      await waitFor(() => {
+        const carousel = screen.getByTestId('pokemon-carousel');
+        expect(within(carousel).getByTestId('pokemon-card-266')).toBeInTheDocument();
       });
     });
   });

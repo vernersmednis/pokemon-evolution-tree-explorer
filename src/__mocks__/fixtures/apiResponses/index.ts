@@ -5062,3 +5062,38 @@ export const mockPichuEvolutionChainResponse = {
     id: 10,
   },
 };
+
+// ===== EDGE CASES FOR TESTING =====
+
+// Mock API response for a Pokemon with no types (for testing edge cases)
+export const mockPokemonWithNoTypesApiResponse = {
+  data: {
+    id: 999,
+    name: 'notypemon',
+    sprites: {
+      front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/999.png',
+      other: {
+        'official-artwork': {
+          front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/999.png',
+        },
+      },
+    },
+    types: [], // No types
+    stats: [
+      { base_stat: 50, stat: { name: 'hp' } },
+      { base_stat: 50, stat: { name: 'attack' } },
+      { base_stat: 50, stat: { name: 'defense' } },
+      { base_stat: 50, stat: { name: 'special-attack' } },
+      { base_stat: 50, stat: { name: 'special-defense' } },
+      { base_stat: 50, stat: { name: 'speed' } },
+    ],
+    abilities: [],
+    height: 10,
+    weight: 100,
+    base_experience: 100,
+    species: {
+        name: 'bulbasaur',
+        url: 'https://pokeapi.co/api/v2/pokemon-species/1/'
+    }
+  },
+};

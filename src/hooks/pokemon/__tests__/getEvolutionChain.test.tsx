@@ -13,7 +13,7 @@ import {
   mockDustoxApiResponse,
   mockWurmpleSpeciesResponse,
   mockWurmpleEvolutionChainResponse,
-  mockWurmpleEvolutionChainNode,
+  mockWurmpleEvolutionChainNodePokemon
 } from '@/__mocks__/fixtures';
 
 // Mock the pokemon service
@@ -161,7 +161,7 @@ describe('useGetEvolutionChain', () => {
 
       // Verify the chain structure
       const chain = result.current.data;
-      expect(chain).toStrictEqual([mockWurmpleEvolutionChainNode]);
+      expect(chain).toStrictEqual([mockWurmpleEvolutionChainNodePokemon]);
     });
   });
 

@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import EvolutionChainNode from '../index';
 import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemon';
 import {
-  mockWurmpleEvolutionChainNode
+  mockWurmpleEvolutionChainNodePokemon
 } from '@/__mocks__/fixtures';
 
 // Helper function to render with Router
@@ -19,7 +19,7 @@ const renderEvolutionChainNode = (pokemon: EvolutionChainNodePokemon) => {
 describe('EvolutionChainNode', () => {
   describe('recursive rendering', () => {
     it('should render pokemon cards for each pokemon in the chain', () => {
-      renderEvolutionChainNode(mockWurmpleEvolutionChainNode);
+      renderEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
 
       // Wurmple (265) -> Silcoon (266) -> Beautifly (267)
       //               -> Cascoon (268) -> Dustox (269)
@@ -34,7 +34,7 @@ describe('EvolutionChainNode', () => {
   describe('node content', () => {
 
     it('should have correct parent-child nesting for entire evolution tree', () => {
-      renderEvolutionChainNode(mockWurmpleEvolutionChainNode);
+      renderEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
 
       // Get all evolution chain nodes
       const wurmpleNode = screen.getByTestId('evolution-chain-node-265');
@@ -53,7 +53,7 @@ describe('EvolutionChainNode', () => {
     });
 
     it('should render an arrow for each child node', () => {
-      renderEvolutionChainNode(mockWurmpleEvolutionChainNode);
+      renderEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
  
       // Get all evolution chain nodes
       const wurmpleNode = screen.getByTestId('evolution-chain-node-265');

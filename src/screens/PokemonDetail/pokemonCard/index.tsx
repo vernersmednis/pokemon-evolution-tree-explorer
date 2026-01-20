@@ -11,7 +11,7 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
   const imageUrl = pokemon.sprites.other!['official-artwork']!.front_default;
 
   return (
-    <Card className="w-64" variant="pokeball-outline-secondary" data-testid={`pokemon-card-${pokemon.id}`}>
+    <Card className="w-64" variant="pokeball-outline-secondary">
       <CardHeader>
         <Typography variant="caption">#{pokemon.id}</Typography>
         <CardTitle className="text-left">

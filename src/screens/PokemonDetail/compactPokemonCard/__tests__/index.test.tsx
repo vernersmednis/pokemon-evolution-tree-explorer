@@ -41,7 +41,8 @@ describe('CompactPokemonCard', () => {
             const onCardClick = jest.fn();
             render(<CompactPokemonCard pokemon={mockWurmpleEvolutionChainNodePokemon} onCardClick={onCardClick} />);
 
-            await userEvent.click(screen.getByTestId('compact-pokemon-card-265'));
+            // Click on the card image to trigger the click handler
+            await userEvent.click(screen.getByRole('img', { name: 'wurmple' }));
             expect(onCardClick).toHaveBeenCalledWith(mockWurmpleEvolutionChainNodePokemon);
         });
 

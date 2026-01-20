@@ -23,49 +23,70 @@ describe('EvolutionChainNode', () => {
 
       // Wurmple (265) -> Silcoon (266) -> Beautifly (267)
       //               -> Cascoon (268) -> Dustox (269)
-      expect(screen.getByTestId('pokemon-card-265')).toBeInTheDocument();
-      expect(screen.getByTestId('pokemon-card-266')).toBeInTheDocument();
-      expect(screen.getByTestId('pokemon-card-267')).toBeInTheDocument();
-      expect(screen.getByTestId('pokemon-card-268')).toBeInTheDocument();
-      expect(screen.getByTestId('pokemon-card-269')).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'wurmple' })).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'silcoon' })).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'beautifly' })).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'cascoon' })).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'dustox' })).toBeInTheDocument();
     });
   });
 
   describe('node content', () => {
 
     it('should have correct parent-child nesting for entire evolution tree', () => {
-      renderEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
+      const { container } = renderEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
 
-      // Get all evolution chain nodes
-      const wurmpleNode = screen.getByTestId('evolution-chain-node-265');
-      const silcoonNode = screen.getByTestId('evolution-chain-node-266');
-      const beautilfyNode = screen.getByTestId('evolution-chain-node-267');
-      const cascoonNode = screen.getByTestId('evolution-chain-node-268');
-      const dustoxNode = screen.getByTestId('evolution-chain-node-269');
-
+      // Verify all Pokemon in the evolution chain are rendered
       // Wurmple (265) -> Silcoon (266) -> Beautifly (267)
       //               -> Cascoon (268) -> Dustox (269)
-      expect(wurmpleNode).toBeInTheDocument();
-      expect(wurmpleNode).toContainElement(silcoonNode);
-      expect(wurmpleNode).toContainElement(cascoonNode);
-      expect(silcoonNode).toContainElement(beautilfyNode);
-      expect(cascoonNode).toContainElement(dustoxNode);
+      // Note: Pokemon name appears twice in each card (title and species), so use getAllByText
+      expect(screen.getAllByText('wurmple').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('silcoon').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('beautifly').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('cascoon').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('dustox').length).toBeGreaterThan(0);
+
+      // Verify parent-child relationships via image containment
+      const silcoonImg = screen.getByRole('img', { name: 'silcoon' });
+      const cascoonImg = screen.getByRole('img', { name: 'cascoon' });
+      const beautiflyImg = screen.getByRole('img', { name: 'beautifly' });
+      const dustoxImg = screen.getByRole('img', { name: 'dustox' });
+      
+      // Find wurmple's container (the root node)
+      const wurmpleContainer = container.firstElementChild;
+      expect(wurmpleContainer).not.toBeNull();
+      
+      // Wurmple should contain silcoon and cascoon (its direct evolutions)
+      expect(wurmpleContainer).toContainElement(silcoonImg);
+      expect(wurmpleContainer).toContainElement(cascoonImg);
+      
+      // Find silcoon's node wrapper (div.flex.flex-col.items-center) which contains both the card and its children
+      const silcoonContainer = silcoonImg.closest('.items-center');
+      expect(silcoonContainer).not.toBeNull();
+      expect(silcoonContainer).toContainElement(beautiflyImg);
+      
+      // Find cascoon's node wrapper and verify it contains dustox
+      const cascoonContainer = cascoonImg.closest('.items-center');
+      expect(cascoonContainer).not.toBeNull();
+      expect(cascoonContainer).toContainElement(dustoxImg);
     });
 
     it('should render an arrow for each child node', () => {
       renderEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
  
-      // Get all evolution chain nodes
-      const wurmpleNode = screen.getByTestId('evolution-chain-node-265');
-      const silcoonNode = screen.getByTestId('evolution-chain-node-266');
-      const cascoonNode = screen.getByTestId('evolution-chain-node-268');
-
       // Wurmple (265) -> Silcoon (266) -> Beautifly (267)
       //               -> Cascoon (268) -> Dustox (269)
-      expect(wurmpleNode).toContainElement(screen.getByTestId('evolution-chain-node-arrow-266'));
-      expect(wurmpleNode).toContainElement(screen.getByTestId('evolution-chain-node-arrow-268'));
-      expect(silcoonNode).toContainElement(screen.getByTestId('evolution-chain-node-arrow-267'));
-      expect(cascoonNode).toContainElement(screen.getByTestId('evolution-chain-node-arrow-269'));
+      // Each evolution has a trigger and condition, verify arrows exist via their content
+      const arrows = screen.getAllByText('▼');
+      expect(arrows).toHaveLength(4); // 4 arrows for 4 evolutions (silcoon, cascoon, beautifly, dustox)
+
+      // Verify evolution triggers are displayed
+      const levelUpTriggers = screen.getAllByText('level-up');
+      expect(levelUpTriggers).toHaveLength(4);
+
+      // Verify evolution conditions are displayed
+      expect(screen.getAllByText('Level 7')).toHaveLength(2); // silcoon and cascoon
+      expect(screen.getAllByText('Level 10')).toHaveLength(2); // beautifly and dustox
     });
   });
 });

@@ -28,22 +28,41 @@ describe('CompactEvolutionChainNode', () => {
   describe('recursive rendering', () => {
 
     it('should have correct parent-child nesting for entire evolution tree', () => {
-      renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
+      const { container } = renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
 
-      // Get all compact evolution chain nodes
-      const wurmpleNode = screen.getByTestId('compact-evolution-chain-node-265');
-      const silcoonNode = screen.getByTestId('compact-evolution-chain-node-266');
-      const beautilfyNode = screen.getByTestId('compact-evolution-chain-node-267');
-      const cascoonNode = screen.getByTestId('compact-evolution-chain-node-268');
-      const dustoxNode = screen.getByTestId('compact-evolution-chain-node-269');
-
+      // Verify all Pokemon in the evolution chain are rendered by their names
       // Wurmple (265) -> Silcoon (266) -> Beautifly (267)
       //               -> Cascoon (268) -> Dustox (269)
-      expect(wurmpleNode).toBeInTheDocument();
-      expect(wurmpleNode).toContainElement(silcoonNode);
-      expect(wurmpleNode).toContainElement(cascoonNode);
-      expect(silcoonNode).toContainElement(beautilfyNode);
-      expect(cascoonNode).toContainElement(dustoxNode);
+      expect(screen.getByText('wurmple')).toBeInTheDocument();
+      expect(screen.getByText('silcoon')).toBeInTheDocument();
+      expect(screen.getByText('beautifly')).toBeInTheDocument();
+      expect(screen.getByText('cascoon')).toBeInTheDocument();
+      expect(screen.getByText('dustox')).toBeInTheDocument();
+
+      // Verify parent-child relationships via image containment
+      const silcoonImg = screen.getByRole('img', { name: 'silcoon' });
+      const cascoonImg = screen.getByRole('img', { name: 'cascoon' });
+      const beautiflyImg = screen.getByRole('img', { name: 'beautifly' });
+      const dustoxImg = screen.getByRole('img', { name: 'dustox' });
+      
+      // Find wurmple's container (the root node) - traverse up to find the wrapper div
+      const wurmpleContainer = container.firstElementChild;
+      expect(wurmpleContainer).not.toBeNull();
+      
+      // Wurmple should contain silcoon and cascoon (its direct evolutions)
+      expect(wurmpleContainer).toContainElement(silcoonImg);
+      expect(wurmpleContainer).toContainElement(cascoonImg);
+      
+      // Find silcoon's node wrapper - the div that contains both silcoon and its children (ml-8 div)
+      // Each node is wrapped in a div that has the card and a ml-8 div for children
+      const silcoonWrapper = silcoonImg.closest('.flex.items-center')?.parentElement;
+      expect(silcoonWrapper).not.toBeNull();
+      expect(silcoonWrapper).toContainElement(beautiflyImg);
+      
+      // Find cascoon's node wrapper and verify it contains dustox
+      const cascoonWrapper = cascoonImg.closest('.flex.items-center')?.parentElement;
+      expect(cascoonWrapper).not.toBeNull();
+      expect(cascoonWrapper).toContainElement(dustoxImg);
     }); 
   });
 
@@ -52,38 +71,33 @@ describe('CompactEvolutionChainNode', () => {
     it('should render compact pokemon cards for each compact evolution chain node', () => {
       renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon);
 
-      // Get all compact evolution chain nodes
-      const wurmpleNode = screen.getByTestId('compact-evolution-chain-node-265');
-      const silcoonNode = screen.getByTestId('compact-evolution-chain-node-266');
-      const beautilfyNode = screen.getByTestId('compact-evolution-chain-node-267');
-      const cascoonNode = screen.getByTestId('compact-evolution-chain-node-268');
-      const dustoxNode = screen.getByTestId('compact-evolution-chain-node-269');
+      // Verify all Pokemon cards are rendered with their images and names
+      expect(screen.getByRole('img', { name: 'wurmple' })).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'silcoon' })).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'beautifly' })).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'cascoon' })).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'dustox' })).toBeInTheDocument();
 
-      expect(wurmpleNode).toContainElement(screen.getByTestId('compact-pokemon-card-265'));
-      expect(silcoonNode).toContainElement(screen.getByTestId('compact-pokemon-card-266'));
-      expect(beautilfyNode).toContainElement(screen.getByTestId('compact-pokemon-card-267'));
-      expect(cascoonNode).toContainElement(screen.getByTestId('compact-pokemon-card-268'));
-      expect(dustoxNode).toContainElement(screen.getByTestId('compact-pokemon-card-269'));
+      // Verify Pokemon names are displayed
+      expect(screen.getByText('wurmple')).toBeInTheDocument();
+      expect(screen.getByText('silcoon')).toBeInTheDocument();
+      expect(screen.getByText('beautifly')).toBeInTheDocument();
+      expect(screen.getByText('cascoon')).toBeInTheDocument();
+      expect(screen.getByText('dustox')).toBeInTheDocument();
     });
 
 
     it('each node should contain a depth and branches indexes (for example: 1.1, 1.2, 2.2, 1.3, 2.3)', () => {
       renderCompactEvolutionChainNode(mockWurmpleEvolutionChainNodePokemon, 1, 1);
 
-      // Get all compact evolution chain nodes
-      const wurmpleNode = screen.getByTestId('compact-evolution-chain-node-265');
-      const silcoonNode = screen.getByTestId('compact-evolution-chain-node-266');
-      const beautilfyNode = screen.getByTestId('compact-evolution-chain-node-267');
-      const cascoonNode = screen.getByTestId('compact-evolution-chain-node-268');
-      const dustoxNode = screen.getByTestId('compact-evolution-chain-node-269');
- 
+      // Verify evolution numbers are displayed with correct depth and branch indices
       // Wurmple (1.1) -> Silcoon (1.2) -> Beautifly (1.3)
       //               -> Cascoon (2.2) -> Dustox (2.3)
-      expect(wurmpleNode).toHaveTextContent('1.1');
-      expect(silcoonNode).toHaveTextContent('1.2');
-      expect(cascoonNode).toHaveTextContent('2.2');
-      expect(beautilfyNode).toHaveTextContent('1.3'); 
-      expect(dustoxNode).toHaveTextContent('2.3');
+      expect(screen.getByText('1.1')).toBeInTheDocument();
+      expect(screen.getByText('1.2')).toBeInTheDocument();
+      expect(screen.getByText('2.2')).toBeInTheDocument();
+      expect(screen.getByText('1.3')).toBeInTheDocument(); 
+      expect(screen.getByText('2.3')).toBeInTheDocument();
     });
   });
 });

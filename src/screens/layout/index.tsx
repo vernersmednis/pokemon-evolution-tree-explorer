@@ -20,6 +20,7 @@ function Layout() {
             variant="pokeball"
             size="icon"
             onClick={() => navigate("/dashboard")}
+            aria-label="Go to dashboard"
           >
             <Home />
           </Button>

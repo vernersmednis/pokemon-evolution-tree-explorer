@@ -1,15 +1,12 @@
 import { getPokemonSpecies, getEvolutionChain, getPokemon } from "@/api/services/pokemon";
 import { useQuery } from '@tanstack/react-query';
-import type { EvolutionChainNodePokemon } from '@/types/evolutionChainNodePokemon';
 import type { EvolutionChainNode } from '@/types/evolutionChainNode';
 
-// WeakMap to store parent relationships without circular references
-export const parentMap = new WeakMap();
 
 // Simple function to transform evolution chain to EvolutionChainNodePokemon[]
 const transformEvolutionChain = async (chain: EvolutionChainNode) => {
   // Process the chain recursively
-  const processChain = async (chainNode: EvolutionChainNode, parent?: EvolutionChainNodePokemon) => {
+  const processChain = async (chainNode: EvolutionChainNode) => {
     // Get basic Pokemon data
     const pokemonResponse = await getPokemon(chainNode.species.name);
     const pokemonData = pokemonResponse.data;
@@ -23,15 +20,10 @@ const transformEvolutionChain = async (chain: EvolutionChainNode) => {
       evolvesTo: []
     };
     
-    // Store parent relationship in WeakMap instead of on the object
-    if (parent) {
-      parentMap.set(currentPokemon, parent);
-    }
-    
     // Transform evolvesTo recursively, passing current pokemon as parent
     const evolvesTo = [];
     for (const evolution of chainNode.evolves_to) {
-      evolvesTo.push(await processChain(evolution, currentPokemon));
+      evolvesTo.push(await processChain(evolution));
     }
     
     // Update evolvesTo array

@@ -17,9 +17,9 @@ const renderLayout = (initialRoute: string = '/') => {
     <MemoryRouter initialEntries={[initialRoute]}>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<div data-testid="outlet-content">Outlet Content</div>} />
-          <Route path="dashboard" element={<div data-testid="dashboard-content">Dashboard Content</div>} />
-          <Route path="pokemon/:id" element={<div data-testid="pokemon-detail">Pokemon Detail</div>} />
+          <Route index element={<main aria-label="outlet content">Outlet Content</main>} />
+          <Route path="dashboard" element={<main aria-label="dashboard content">Dashboard Content</main>} />
+          <Route path="pokemon/:id" element={<main aria-label="pokemon detail">Pokemon Detail</main>} />
         </Route>
       </Routes>
     </MemoryRouter>
@@ -60,10 +60,8 @@ describe('Layout', () => {
       renderLayout();
 
       const header = screen.getByRole('banner');
-      const buttons = within(header).getAllByRole('button');
-      expect(buttons.length).toBeGreaterThan(0);
-      // The first button should be the home button (with House icon)
-      expect(buttons[0]).toBeInTheDocument();
+      const homeButton = within(header).getByRole('button', { name: 'Go to dashboard' });
+      expect(homeButton).toBeInTheDocument();
     });
 
     it('should render the search component in header', () => {
@@ -79,9 +77,7 @@ describe('Layout', () => {
       renderLayout();
 
       const header = screen.getByRole('banner');
-      const buttons = within(header).getAllByRole('button');
-      // First button should be the home button (icon only)
-      const homeButton = buttons[0];
+      const homeButton = within(header).getByRole('button', { name: 'Go to dashboard' });
       await user.click(homeButton);
 
       expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
@@ -92,13 +88,13 @@ describe('Layout', () => {
     it('should render the Outlet content', () => {
       renderLayout();
 
-      expect(screen.getByTestId('outlet-content')).toBeInTheDocument();
+      expect(screen.getByRole('main', { name: 'outlet content' })).toBeInTheDocument();
     });
 
     it('should render dashboard content at /dashboard route', () => {
       renderLayout('/dashboard');
 
-      expect(screen.getByTestId('dashboard-content')).toBeInTheDocument();
+      expect(screen.getByRole('main', { name: 'dashboard content' })).toBeInTheDocument();
     });
   });
 

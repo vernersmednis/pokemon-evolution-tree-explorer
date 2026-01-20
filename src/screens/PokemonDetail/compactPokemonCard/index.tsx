@@ -17,7 +17,6 @@ const CompactPokemonCard = ({ pokemon, onCardClick }: CompactPokemonCardProps) =
           variant="pokeball-outline"
           className="cursor-pointer py-0"
           onClick={() => onCardClick(pokemon)}
-          data-testid={`compact-pokemon-card-${pokemon.id}`}
         >
           <CardContent className="flex items-center gap-2 p-2">
             {/* Pokemon Image */}

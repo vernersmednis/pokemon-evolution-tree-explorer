@@ -90,7 +90,6 @@ const PokemonDetail = () => {
           {selectedPokemon && evolutionList && (
             <Carousel
               key={selectedPokemon.id}
-              data-testid="pokemon-carousel"
               orientation="vertical"
               opts={{
                 startIndex: initialIndex,

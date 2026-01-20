@@ -206,15 +206,16 @@ describe('PokemonDetail', () => {
 
       // Wait for evolution chain to load
       await waitFor(() => {
-        expect(screen.getByTestId('compact-pokemon-card-265')).toBeInTheDocument();
+        expect(screen.getAllByRole('img', { name: 'wurmple' }).length).toBeGreaterThan(0);
       });
 
-      // Click on a compact pokemon card
-      await userEvent.click(screen.getByTestId('compact-pokemon-card-265'));
+      // Click on the compact pokemon card image (the smaller one with w-8 class)
+      const wurmpleImages = screen.getAllByRole('img', { name: 'wurmple' });
+      const compactCardImage = wurmpleImages.find(img => img.classList.contains('w-8'))!;
+      await userEvent.click(compactCardImage);
       // Assert dialog/carousel is open
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-      // Or check for carousel-specific content
-      expect(screen.getByTestId('pokemon-carousel')).toBeInTheDocument();
+      const dialog = screen.getByRole('dialog');
+      expect(dialog).toBeInTheDocument();
     });
 
     it('should display correct pokemon in carousel after clicking card', async () => {
@@ -236,15 +237,18 @@ describe('PokemonDetail', () => {
       renderPokemonDetail('wurmple');
 
       await waitFor(() => {
-        expect(screen.getByTestId('compact-pokemon-card-266')).toBeInTheDocument();
+        expect(screen.getAllByRole('img', { name: 'silcoon' }).length).toBeGreaterThan(0);
       });
 
-      await userEvent.click(screen.getByTestId('compact-pokemon-card-266'));
+      // Click on the compact pokemon card image (the smaller one with w-8 class)
+      const silcoonImages = screen.getAllByRole('img', { name: 'silcoon' });
+      const compactCardImage = silcoonImages.find(img => img.classList.contains('w-8'))!;
+      await userEvent.click(compactCardImage);
 
       // Verify the carousel dialog shows the clicked pokemon's card
       await waitFor(() => {
-        const carousel = screen.getByTestId('pokemon-carousel');
-        expect(within(carousel).getByTestId('pokemon-card-266')).toBeInTheDocument();
+        const dialog = screen.getByRole('dialog');
+        expect(within(dialog).getAllByText('silcoon').length).toBeGreaterThan(0);
       });
     });
   });

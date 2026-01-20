@@ -4,7 +4,7 @@ import type { EvolutionChainNodeArrowProps } from './types';
 const EvolutionChainNodeArrow = ({ pokemon }: EvolutionChainNodeArrowProps) => {
 
   return (
-    <div className="flex items-center gap-4 my-4" data-testid={`evolution-chain-node-arrow-${pokemon.id}`}>
+    <div className="flex items-center gap-4 my-4">
       {/* Arrow */}
       <div className="flex flex-col items-center">
         <div className="w-0.5 h-16 bg-black"></div>

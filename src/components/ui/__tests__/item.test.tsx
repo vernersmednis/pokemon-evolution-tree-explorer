@@ -20,7 +20,7 @@ describe('Item', () => {
         <span>Item Header</span>
       </ItemHeader>
       <ItemMedia variant="icon">
-        <svg data-testid="icon" />
+        <svg aria-label="icon" role="img" />
       </ItemMedia>
       <ItemContent>
         <ItemTitle>Pokemon Evolution</ItemTitle>
@@ -69,8 +69,8 @@ describe('Item', () => {
     });
 
     it('accepts icon variant', () => {
-      render(<ItemMedia variant="icon"><svg /></ItemMedia>);
-      const media = document.querySelector('[data-slot="item-media"]');
+      const { container } = render(<ItemMedia variant="icon"><svg /></ItemMedia>);
+      const media = container.querySelector('[data-slot="item-media"]');
       expect(media).toHaveAttribute('data-variant', 'icon');
     });
   });
@@ -83,7 +83,7 @@ describe('Item', () => {
 
     it('renders item with media', () => {
       renderFullItem();
-      expect(screen.getByTestId('icon')).toBeInTheDocument();
+      expect(screen.getByRole('img', { name: 'icon' })).toBeInTheDocument();
     });
 
     it('renders item with title', () => {
@@ -124,14 +124,14 @@ describe('ItemGroup', () => {
 
 describe('ItemSeparator', () => {
   it('renders a group with a separator between items', () => {
-    render(
+    const { container } = render(
       <ItemGroup>
         <Item>Item 1</Item>
         <ItemSeparator />
         <Item>Item 2</Item>
       </ItemGroup>
     );
-    expect(document.querySelector('[data-slot="item-separator"]')).toBeInTheDocument();
+    expect(container.querySelector('[data-slot="item-separator"]')).toBeInTheDocument();
     expect(screen.getByText('Item 1')).toBeInTheDocument();
     expect(screen.getByText('Item 2')).toBeInTheDocument();
   });

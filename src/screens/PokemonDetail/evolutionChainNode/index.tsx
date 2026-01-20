@@ -6,7 +6,7 @@ import type { EvolutionChainNodeProps } from './types';
 
 const EvolutionChainNode = ({ pokemon }: EvolutionChainNodeProps) => {
   return (
-    <div className="flex flex-col items-center" data-testid={`evolution-chain-node-${pokemon.id}`}>
+    <div className="flex flex-col items-center">
       {/* Current Pokemon Card */}
       <PokemonCard pokemon={pokemon} />
 
